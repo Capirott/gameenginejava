@@ -10,6 +10,7 @@ import models.RawModel;
 import models.TextureModel;
 import renderEngine.DisplayManager;
 import renderEngine.Loader;
+import renderEngine.MasterRenderer;
 import renderEngine.OBJLoader;
 import renderEngine.Renderer;
 import shaders.StaticShader;
@@ -20,8 +21,6 @@ public class MainGameLoop {
 	public static void main(String[] args) {
 		DisplayManager.createDisplay();
 		Loader loader =  new Loader();
-		StaticShader shader = new StaticShader();
-		Renderer renderer = new Renderer(shader);
 
 		RawModel model = OBJLoader.loadObjModel("dragon", loader);
 		ModelTexture texture = new ModelTexture(loader.loadTexture("white"));
@@ -32,19 +31,17 @@ public class MainGameLoop {
 		Light light = new Light(new Vector3f(0, 0, -20), new Vector3f(1, 0, 1));
 		Camera camera = new Camera();
 		
+		MasterRenderer renderer = new MasterRenderer();
+		
+		
 		while (!Display.isCloseRequested()) {
-			entity.increaseRotation(0.0f, 1.0f, 0.0f);
-			
 			camera.move();
-			shader.start();
-			shader.loadLight(light);
-			shader.loadViewMatrix(camera);
-			renderer.prepare();
-			renderer.render(entity, shader);
-			shader.stop();
+			entity.increaseRotation(0.0f, 1.0f, 0.0f);
+			renderer.processEntity(entity);
+			renderer.render(light, camera);
 			DisplayManager.updateDisplay();
 		}
-		shader.cleanUp();
+		renderer.clenUp();
 		loader.cleanUp();
 		DisplayManager.closeDisplay();
 	}
