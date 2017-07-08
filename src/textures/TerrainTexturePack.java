@@ -46,8 +46,5 @@ public class TerrainTexturePack {
 	public void setbTexture(TerrainTexture bTexture) {
 		this.bTexture = bTexture;
 	}
-	
-	
-	
 }
 
