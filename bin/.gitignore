@@ -3,6 +3,7 @@
 /models/
 /renderEngine/
 /shaders/
+/terrains/
 /textures/
 /toolbox/
-/terrains/
+/entities/

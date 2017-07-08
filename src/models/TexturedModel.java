@@ -2,12 +2,12 @@ package models;
 
 import textures.ModelTexture;
 
-public class TextureModel {
+public class TexturedModel {
 	private RawModel rawModel;
 
 	private ModelTexture texture;
 	
-	public TextureModel(RawModel model, ModelTexture texture) {
+	public TexturedModel(RawModel model, ModelTexture texture) {
 		this.rawModel = model;
 		this.texture = texture;
 	}

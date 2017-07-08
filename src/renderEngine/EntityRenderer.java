@@ -3,16 +3,15 @@ package renderEngine;
 import java.util.List;
 import java.util.Map;
 
-import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
 import org.lwjgl.util.vector.Matrix4f;
 
-import entity.Entity;
+import entities.Entity;
 import models.RawModel;
-import models.TextureModel;
+import models.TexturedModel;
 import shaders.StaticShader;
 import textures.ModelTexture;
 import toolbox.Maths;
@@ -22,8 +21,8 @@ public class EntityRenderer {
 
 	private StaticShader shader; 
 	
-	public void render(Map<TextureModel, List<Entity>> entities) {
-		for (TextureModel model : entities.keySet()) {
+	public void render(Map<TexturedModel, List<Entity>> entities) {
+		for (TexturedModel model : entities.keySet()) {
 			prepareTextureModel(model);
 			List<Entity> batch = entities.get(model);
 			for (Entity entity : batch) {
@@ -34,7 +33,7 @@ public class EntityRenderer {
 		}
 	}
 	
-	private void prepareTextureModel(TextureModel model) {
+	private void prepareTextureModel(TexturedModel model) {
 		RawModel rawModel = model.getRawModel();
 		GL30.glBindVertexArray(rawModel.getVaoID());
 		GL20.glEnableVertexAttribArray(0);

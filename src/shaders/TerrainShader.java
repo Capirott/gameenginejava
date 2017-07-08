@@ -2,8 +2,8 @@ package shaders;
 
 import org.lwjgl.util.vector.Matrix4f;
 
-import entity.Camera;
-import entity.Light;
+import entities.Camera;
+import entities.Light;
 import toolbox.Maths;
 
 public class TerrainShader extends ShaderProgram{
@@ -25,7 +25,7 @@ public class TerrainShader extends ShaderProgram{
     @Override
     protected void bindAttributes() {
         super.bindAttribute(0, "position");
-        super.bindAttribute(1, "textureCoords");
+        super.bindAttribute(1, "textureCoordinates");
         super.bindAttribute(2, "normal");
     }
 
@@ -35,7 +35,7 @@ public class TerrainShader extends ShaderProgram{
 		location_projectionMatrix = super.getUniformLocation("projectionMatrix");
 		location_viewMatrix = super.getUniformLocation("viewMatrix");
 		location_lightPosition = super.getUniformLocation("lightPosition");
-		location_lightPosition = super.getUniformLocation("lightColour");
+		location_lightColour = super.getUniformLocation("lightColour");
 		location_shineDamper = super.getUniformLocation("shineDamper");
 		location_reflectivity = super.getUniformLocation("reflectivity");
 	}
