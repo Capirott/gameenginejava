@@ -76,7 +76,7 @@ public class MainGameLoop {
 		
 		TerrainTexturePack texturePack = new TerrainTexturePack(backgroundTexture, rTexture, gTexture, bTexture);
 		
-		Camera camera = new Camera();
+		Camera camera = new Camera(player);
 		camera.setPosition(new Vector3f(500, 30, 600));
 		MasterRenderer renderer = new MasterRenderer();
 
