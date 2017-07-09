@@ -1,6 +1,5 @@
 package engineTester;
 
-import java.awt.HeadlessException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -36,7 +35,7 @@ public class MainGameLoop {
 		ModelData data = OBJFileLoader.loadOBJ("tree");
 		ModelData data2 = OBJFileLoader.loadOBJ("fern");
 		ModelData data3 = OBJFileLoader.loadOBJ("grass");
-		ModelData data4 = OBJFileLoader.loadOBJ("dragon");
+		ModelData data4 = OBJFileLoader.loadOBJ("player");
 		ModelData data5 = OBJFileLoader.loadOBJ("box");
 		
 		RawModel model = loader.loadToVAO(data.getVertices(), data.getTextureCoords(), data.getNormals(), data.getIndices());
@@ -59,19 +58,8 @@ public class MainGameLoop {
 		List<Entity> entities = new ArrayList<Entity>();
 
 
-		Player player = new Player(playerModel,	new Vector3f(500, 0, 470), 0, 0, 0, 1);
-		
-		Random random = new Random();
-		for (int i = 0; i < 5000; i++) {
-			entities.add(new Entity(staticModel,
-					new Vector3f(random.nextFloat() * 1600, 0, random.nextFloat() * 1600), 0, 0, 0, 5 + random.nextFloat() * 15));
-			entities.add(new Entity(fernModel,
-					new Vector3f(random.nextFloat() * 1600, 0, random.nextFloat() * 1600), 0, 0, 0, 1));
-			entities.add(new Entity(grassModel,
-					new Vector3f(random.nextFloat() * 1400 + 100, 0, random.nextFloat() * 1400 + 100), 0, 0, 0, 3));
-			entities.add(new Entity(boxModel,
-					new Vector3f(random.nextFloat() * 3600 + 100, 3, random.nextFloat() * 3600 + 100), 0, 0, 0, 3));
-		}
+		Player player = new Player(playerModel,	new Vector3f(500, 0, 470), 0, 0, 0, 0.1f);
+
 
 		Light light = new Light(new Vector3f(20000, 20000, 2000), new Vector3f(0.99f, 0.83f, 0.25f));
 
@@ -88,14 +76,18 @@ public class MainGameLoop {
 		camera.setPosition(new Vector3f(500, 30, 600));
 		MasterRenderer renderer = new MasterRenderer();
 
-		for (int i = 0; i < 10; ++i) {
-			for (int j = 0; j < 10; ++j) {
+		for (int i = 0; i < 1; ++i) {
+			for (int j = 0; j < 1; ++j) {
 				Terrain terrain = new Terrain(i, j, loader, texturePack, blendMap, "heightMap");
 				terrains.add(terrain);
 			}
+		}		
+		
+		
+		for (int i = 0; i < 400; i++) {
+			entities.add(generateEntity(staticModel, 5, 25, 0));
+			entities.add(generateEntity(fernModel, 0.5f, 1.5f, 0));
 		}
-		
-		
 		
 		while (!Display.isCloseRequested()) {
 			camera.move();
@@ -106,7 +98,7 @@ public class MainGameLoop {
 			for (Entity entity : entities) {
 				renderer.processEntity(entity);
 			}
-			player.move();
+			player.move(terrains.get(0));
 			renderer.processEntity(player);
 			renderer.render(light, camera);
 			DisplayManager.updateDisplay();
@@ -116,6 +108,14 @@ public class MainGameLoop {
 		loader.cleanUp();
 		DisplayManager.closeDisplay();
 
+	}
+	
+	public static Entity generateEntity(TexturedModel model, float minSize, float maxSize, float heightOffSet) {
+		Random random = new Random();
+		float x = random.nextFloat() * 800;
+		float z = random.nextFloat() * 600;
+		float y = terrains.get(0).getHeightOfTerrain(x, z) + heightOffSet;
+		return new Entity(model, new Vector3f(x, y, z), 0, 0, 0, minSize + maxSize * random.nextFloat());
 	}
 
 }
