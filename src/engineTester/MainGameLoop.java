@@ -18,13 +18,14 @@ import objConverter.OBJFileLoader;
 import renderEngine.DisplayManager;
 import renderEngine.Loader;
 import renderEngine.MasterRenderer;
-import renderEngine.TerrainRenderer;
 import terrains.Terrain;
 import textures.ModelTexture;
 import textures.TerrainTexture;
 import textures.TerrainTexturePack;
 
 public class MainGameLoop {
+
+	private static ArrayList<Terrain> terrains = new ArrayList<Terrain>();
 
 	public static void main(String[] args) {
 
@@ -34,7 +35,7 @@ public class MainGameLoop {
 		ModelData data = OBJFileLoader.loadOBJ("tree");
 		ModelData data2 = OBJFileLoader.loadOBJ("fern");
 		ModelData data3 = OBJFileLoader.loadOBJ("grass");
-		ModelData data4 = OBJFileLoader.loadOBJ("bunny");
+		ModelData data4 = OBJFileLoader.loadOBJ("dragon");
 		RawModel model = loader.loadToVAO(data.getVertices(), data.getTextureCoords(), data.getNormals(), data.getIndices());
 		RawModel fern = loader.loadToVAO(data2.getVertices(), data2.getTextureCoords(), data2.getNormals(), data2.getIndices());
 		RawModel grass = loader.loadToVAO(data3.getVertices(), data3.getTextureCoords(), data3.getNormals(), data3.getIndices());
@@ -56,13 +57,13 @@ public class MainGameLoop {
 		Player player = new Player(playerModel,	new Vector3f(500, 0, 470), 0, 0, 0, 1);
 		
 		Random random = new Random();
-		for (int i = 0; i < 500; i++) {
+		for (int i = 0; i < 5000; i++) {
 			entities.add(new Entity(staticModel,
-					new Vector3f(random.nextFloat() * 800, 0, random.nextFloat() * 600), 0, 0, 0, 3));
+					new Vector3f(random.nextFloat() * 1600, 0, random.nextFloat() * 1600), 0, 0, 0, 5 + random.nextFloat() * 15));
 			entities.add(new Entity(fernModel,
-					new Vector3f(random.nextFloat() * 800, 0, random.nextFloat() * 600), 0, 0, 0, 1));
+					new Vector3f(random.nextFloat() * 1600, 0, random.nextFloat() * 1600), 0, 0, 0, 1));
 			entities.add(new Entity(grassModel,
-					new Vector3f(random.nextFloat() * 800, 0, random.nextFloat() * 600), 0, 0, 0, 1));
+					new Vector3f(random.nextFloat() * 1400 + 100, 0, random.nextFloat() * 1400 + 100), 0, 0, 0, 3));
 		}
 
 		Light light = new Light(new Vector3f(20000, 20000, 2000), new Vector3f(1, 1, 1));
@@ -80,13 +81,21 @@ public class MainGameLoop {
 		camera.setPosition(new Vector3f(500, 30, 600));
 		MasterRenderer renderer = new MasterRenderer();
 
-		Terrain terrain = new Terrain(0, 0, loader, texturePack, blendMap);
-		Terrain terrain2 = new Terrain(1, 0, loader, texturePack, blendMap);
+		for (int i = 0; i < 10; ++i) {
+			for (int j = 0; j < 10; ++j) {
+				Terrain terrain = new Terrain(i, j, loader, texturePack, blendMap);
+				terrains.add(terrain);
+			}
+		}
+		
+		
+		
 		while (!Display.isCloseRequested()) {
 			camera.move();
 
-			renderer.processTerrain(terrain);
-			renderer.processTerrain(terrain2);
+			for (Terrain terrain : terrains) {
+				renderer.processTerrain(terrain);
+			}
 			for (Entity entity : entities) {
 				renderer.processEntity(entity);
 			}

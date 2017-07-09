@@ -1,9 +1,6 @@
 package entities;
 
-import java.awt.DisplayMode;
-
 import org.lwjgl.input.Keyboard;
-import org.lwjgl.opengl.Display;
 import org.lwjgl.util.vector.Vector3f;
 
 import models.TexturedModel;
@@ -11,7 +8,7 @@ import renderEngine.DisplayManager;
 
 public class Player extends Entity {
 
-	private static final float RUN_SPEED = 20;
+	private static final float RUN_SPEED = 2000;
 	private static final float TURN_SPEED = 160;
 	private static final float GRAVITY = -50;
 	private static final float JUMP_POWER = 30;
