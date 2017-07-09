@@ -1,5 +1,6 @@
 package engineTester;
 
+import java.awt.HeadlessException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -89,7 +90,7 @@ public class MainGameLoop {
 
 		for (int i = 0; i < 10; ++i) {
 			for (int j = 0; j < 10; ++j) {
-				Terrain terrain = new Terrain(i, j, loader, texturePack, blendMap);
+				Terrain terrain = new Terrain(i, j, loader, texturePack, blendMap, "heightMap");
 				terrains.add(terrain);
 			}
 		}
