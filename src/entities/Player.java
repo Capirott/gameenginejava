@@ -47,26 +47,24 @@ public class Player extends Entity {
 		super(null, position, rotX, rotY, rotZ, scale);
 
 		for (int i = 0; i < JType.values().length; ++i) {
-			joints.add(new Joint(joint, position, rotX, rotY, rotZ, scale / 5.0f));        				
+			joints.add(new Joint(joint, position, 0, 0, 0, scale / 5.0f));        				
 		}
-		
-		joints.get(JType.HEAD.ordinal()).setOffset(new Vector3f(0.0f, 17.0f, 0.0f));
-		joints.get(JType.CHEST.ordinal()).setOffset(new Vector3f(0.0f, 12.0f, 0.0f));		
-		joints.get(JType.UPPER_L_ARM.ordinal()).setOffset(new Vector3f(3.0f, 10.0f, 0.0f));			
-		joints.get(JType.LOWER_L_ARM.ordinal()).setOffset(new Vector3f(5.0f, 8.0f, 0.0f));			
-//		joints.get(JType.UPPER_R_ARM.ordinal()).setOffset(new Vector3f(3.0f, 10.0f, 0.0f));	
-		joints.get(JType.R_HAND.ordinal());
-		joints.get(JType.L_HAND.ordinal());
-		joints.get(JType.HIP_JOINT.ordinal());
-		joints.get(JType.UPPER_L_LEG.ordinal());	
-		joints.get(JType.LOWER_L_LEG.ordinal());	
-		joints.get(JType.L_FOOT.ordinal());       	
-		joints.get(JType.UPPER_R_LEG.ordinal());	
-		joints.get(JType.LOWER_R_LEG.ordinal());	
-		joints.get(JType.R_FOOT.ordinal());       	
-		joints.get(JType.LOWER_R_ARM.ordinal());	
-	    joints.get(JType.NECK.ordinal());			
-	
+		joints.get(JType.HEAD.ordinal()).setOffset(new Vector3f(0.0f, 14.0f, 0.0f));
+		joints.get(JType.NECK.ordinal()).setOffset(new Vector3f(0.0f, 11.0f, 0.0f));			
+		joints.get(JType.UPPER_L_ARM.ordinal()).setOffset(new Vector3f(2.0f, 9.0f, 0.0f));			
+		joints.get(JType.LOWER_L_ARM.ordinal()).setOffset(new Vector3f(3.0f, 7.0f, 0.0f));			
+		joints.get(JType.L_HAND.ordinal()).setOffset(new Vector3f(4.0f, 6.0f, 0.0f));
+		joints.get(JType.UPPER_R_ARM.ordinal()).setOffset(new Vector3f(-2.0f, 9.0f, 0.0f));	
+		joints.get(JType.LOWER_R_ARM.ordinal()).setOffset(new Vector3f(-3.0f, 7.0f, 0.0f));	
+		joints.get(JType.R_HAND.ordinal()).setOffset(new Vector3f(-4.0f, 6.0f, 0.0f));;
+		joints.get(JType.CHEST.ordinal()).setOffset(new Vector3f(0.0f, 8.0f, 0.0f));		
+		joints.get(JType.HIP_JOINT.ordinal()).setOffset(new Vector3f(0.0f, 6.0f, 0.0f));
+		joints.get(JType.UPPER_L_LEG.ordinal()).setOffset(new Vector3f(1.5f, 6.0f, 0.0f));	
+		joints.get(JType.LOWER_L_LEG.ordinal()).setOffset(new Vector3f(1.5f, 3.0f, 0.0f));	
+		joints.get(JType.L_FOOT.ordinal()).setOffset(new Vector3f(1.5f, 0.0f, 0.0f));       	
+		joints.get(JType.UPPER_R_LEG.ordinal()).setOffset(new Vector3f(-1.5f, 6.0f, 0.0f));	
+		joints.get(JType.LOWER_R_LEG.ordinal()).setOffset(new Vector3f(-1.5f, 3.0f, 0.0f));	
+		joints.get(JType.R_FOOT.ordinal()).setOffset(new Vector3f(-1.5f, 0.0f, 0.0f));
 	}                                                                          
                                                                                  
                                                                                  
@@ -88,7 +86,10 @@ public class Player extends Entity {
 		}		
 	
 		for (Joint joint : joints) {
-			joint.increaseRotation(0, currentTurnSpeed * DisplayManager.getFrameTimeSeconds(), 0);
+			joint.setRotX(getRotX());
+			joint.setRotY(getRotY());
+			joint.setRotZ(getRotZ());
+			joint.setRotYP(getRotY());
 		}
 	}
 
@@ -123,6 +124,10 @@ public class Player extends Entity {
 	}
 
 	public List<Joint> getJoints() {
+//		ArrayList<Joint> arrayList = new ArrayList<Joint>();			
+//		arrayList.add(joints.get(JType.UPPER_L_ARM.ordinal()));
+//		arrayList.add(joints.get(JType.HEAD.ordinal()));
+//		return arrayList;
 		return joints;
 	}
 

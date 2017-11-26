@@ -36,4 +36,16 @@ public class Maths {
 		float l3 = 1.0f - l1 - l2;
 		return l1 * p1.y + l2 * p2.y + l3 * p3.y;
 	}
+	
+	public static Vector3f rotateYWithAnchor(Vector3f position, Vector3f anchor, float angle) {
+		if (angle != 0 && !position.equals(anchor)) {
+			System.out.println("");
+		}
+		Vector3f pReturn = new Vector3f();
+		angle = (float) Math.toRadians(angle);
+		pReturn.x = (float) (position.x * Math.cos(angle) + position.z * Math.sin(angle) -anchor.x * Math.cos(angle) - anchor.z * Math.sin(angle) + anchor.x);
+		pReturn.y = position.y;
+		pReturn.z = (float) (-position.x * Math.sin(angle) + position.z * Math.cos(angle) + anchor.x * Math.sin(angle) - anchor.z * Math.cos(angle) + anchor.z);
+		return pReturn;		
+	}
 }
