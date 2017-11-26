@@ -35,7 +35,7 @@ public class MainGameLoop {
 		ModelData data = OBJFileLoader.loadOBJ("tree");
 		ModelData data2 = OBJFileLoader.loadOBJ("fern");
 		ModelData data3 = OBJFileLoader.loadOBJ("grass");
-		ModelData data4 = OBJFileLoader.loadOBJ("player");
+		ModelData data4 = OBJFileLoader.loadOBJ("bone");
 		ModelData data5 = OBJFileLoader.loadOBJ("box");
 		
 		RawModel model = loader.loadToVAO(data.getVertices(), data.getTextureCoords(), data.getNormals(), data.getIndices());
@@ -44,7 +44,7 @@ public class MainGameLoop {
 		RawModel bunny = loader.loadToVAO(data4.getVertices(), data4.getTextureCoords(), data4.getNormals(), data4.getIndices()); 
 		RawModel box = loader.loadToVAO(data5.getVertices(), data5.getTextureCoords(), data5.getNormals(), data5.getIndices());
 		
-		TexturedModel playerModel = new TexturedModel(bunny, new ModelTexture(loader.loadTexture("white")));
+		TexturedModel playerModel = new TexturedModel(bunny, new ModelTexture(loader.loadTexture("bone_t")));
 		TexturedModel staticModel = new TexturedModel(model, new ModelTexture(loader.loadTexture("tree")));
 		TexturedModel fernModel = new TexturedModel(fern, new ModelTexture(loader.loadTexture("fern")));
 		TexturedModel grassModel = new TexturedModel(grass, new ModelTexture(loader.loadTexture("grass2")));
@@ -58,7 +58,7 @@ public class MainGameLoop {
 		List<Entity> entities = new ArrayList<Entity>();
 
 
-		Player player = new Player(playerModel,	new Vector3f(500, 0, 470), 0, 0, 0, 0.1f);
+		Player player = new Player(playerModel,	new Vector3f(500, 0, 470), 0, 0, 0, 1.0f);
 
 
 		Light light = new Light(new Vector3f(20000, 20000, 2000), new Vector3f(0.99f, 0.83f, 0.25f));
@@ -96,7 +96,7 @@ public class MainGameLoop {
 				renderer.processTerrain(terrain);
 			}
 			for (Entity entity : entities) {
-				renderer.processEntity(entity);
+//				renderer.processEntity(entity);
 			}
 			player.move(terrains.get(0));
 			renderer.processEntity(player);
