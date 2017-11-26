@@ -13,7 +13,6 @@ public class Camera {
 	private float yaw;
 	private float roll;
 	
-	
 	private Player player;
 	
 	public void move() {
