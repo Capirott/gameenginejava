@@ -52,9 +52,9 @@ public class Player extends Entity {
 		
 		joints.get(JType.HEAD.ordinal()).setOffset(new Vector3f(0.0f, 17.0f, 0.0f));
 		joints.get(JType.CHEST.ordinal()).setOffset(new Vector3f(0.0f, 12.0f, 0.0f));		
-		joints.get(JType.UPPER_L_ARM.ordinal()).setOffset(new Vector3f(-3.0f, 10.0f, 0.0f));			
-		joints.get(JType.UPPER_R_ARM.ordinal()).setOffset(new Vector3f(3.0f, 10.0f, 0.0f));	
-		joints.get(JType.LOWER_L_ARM.ordinal()).setOffset(new Vector3f(0.0f, 12.0f, 0.0f));			
+		joints.get(JType.UPPER_L_ARM.ordinal()).setOffset(new Vector3f(3.0f, 10.0f, 0.0f));			
+		joints.get(JType.LOWER_L_ARM.ordinal()).setOffset(new Vector3f(5.0f, 8.0f, 0.0f));			
+//		joints.get(JType.UPPER_R_ARM.ordinal()).setOffset(new Vector3f(3.0f, 10.0f, 0.0f));	
 		joints.get(JType.R_HAND.ordinal());
 		joints.get(JType.L_HAND.ordinal());
 		joints.get(JType.HIP_JOINT.ordinal());
@@ -86,7 +86,12 @@ public class Player extends Entity {
 			isInAir = false;
 			super.getPosition().y = terrainHeight;
 		}		
+	
+		for (Joint joint : joints) {
+			joint.increaseRotation(0, currentTurnSpeed * DisplayManager.getFrameTimeSeconds(), 0);
+		}
 	}
+
 
 	private void jump() {
 		if (!isInAir) {

@@ -6,7 +6,7 @@ import models.TexturedModel;
 
 public class Joint extends Entity {
 
-	private Vector3f offset;
+	private Vector3f offset = new Vector3f(0.0f, 0.0f, 0.0f);
 	public Joint(TexturedModel model, Vector3f position, float rotX, float rotY, float rotZ, float scale) {
 		super(model, position, rotX, rotY, rotZ, scale);
 	}
@@ -19,10 +19,7 @@ public class Joint extends Entity {
 	
 	@Override
 	public Vector3f getPosition() {
-		if (offset != null)
-			return Vector3f.add(super.getPosition(), offset, new Vector3f());
-		else 
-			return super.getPosition();
+		return Vector3f.add(super.getPosition(), offset, new Vector3f());
 	}
 	
 }
