@@ -44,8 +44,8 @@ public class MainGameLoop {
 		RawModel bone = loader.loadToVAO(data4.getVertices(), data4.getTextureCoords(), data4.getNormals(), data4.getIndices()); 
 		RawModel joint = loader.loadToVAO(data5.getVertices(), data5.getTextureCoords(), data5.getNormals(), data5.getIndices());
 		
-		TexturedModel boneModel = new TexturedModel(bone, new ModelTexture(loader.loadTexture("bone_t")));
-		TexturedModel jointModel = new TexturedModel(joint, new ModelTexture(loader.loadTexture("white")));
+		TexturedModel boneModel = new TexturedModel(bone, new ModelTexture(loader.loadTexture("brick")));
+		TexturedModel jointModel = new TexturedModel(joint, new ModelTexture(loader.loadTexture("grassy")));
 		TexturedModel staticModel = new TexturedModel(model, new ModelTexture(loader.loadTexture("tree")));
 		TexturedModel fernModel = new TexturedModel(fern, new ModelTexture(loader.loadTexture("fern")));
 		TexturedModel grassModel = new TexturedModel(grass, new ModelTexture(loader.loadTexture("grass2")));
@@ -84,7 +84,7 @@ public class MainGameLoop {
 		}		
 		
 		
-		for (int i = 0; i < 400; i++) {
+		for (int i = 0; i < 100; i++) {
 			entities.add(generateEntity(staticModel, 5, 25, 0));
 			entities.add(generateEntity(fernModel, 0.5f, 1.5f, 0));
 		}
@@ -95,9 +95,9 @@ public class MainGameLoop {
 			for (Terrain terrain : terrains) {
 				renderer.processTerrain(terrain);
 			}
-//			for (Entity entity : entities) {
-//				renderer.processEntity(entity);
-//			}
+			for (Entity entity : entities) {
+				renderer.processEntity(entity);
+			}
 			player.move(terrains.get(0));
 			renderer.processEntity(player);
 			renderer.render(light, camera);

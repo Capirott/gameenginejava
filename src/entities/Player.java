@@ -47,7 +47,7 @@ public class Player extends Entity {
 		L_R_HAND
 	}
 	
-	private static final float RUN_SPEED = 20;
+	private static final float RUN_SPEED = 200;
 	private static final float TURN_SPEED = 160;
 	private static final float GRAVITY = -50;
 	private static final float JUMP_POWER = 30;
@@ -81,14 +81,13 @@ public class Player extends Entity {
 		joints.get(JType.L_FOOT.ordinal()).setOffset(new Vector3f(1.5f, 0.0f, 0.0f));       	
 		joints.get(JType.UPPER_R_LEG.ordinal()).setOffset(new Vector3f(-1.5f, 6.0f, 0.0f));	
 		joints.get(JType.LOWER_R_LEG.ordinal()).setOffset(new Vector3f(-1.5f, 3.0f, 0.0f));	
-		joints.get(JType.R_FOOT.ordinal()).setOffset(new Vector3f(-1.5f, 0.0f, 0.0f));	
-		
+		joints.get(JType.R_FOOT.ordinal()).setOffset(new Vector3f(-1.5f, 0.0f, 0.0f));			
 				
 		for (int i = 0; i < BType.values().length; ++i) {
-			bones.add(new Bone(boneTexture, new Vector3f(0.0f, 0.0f, 0.0f), rotX, rotY, rotZ,  new Vector3f(scale.x / 4.0f, scale.y, scale.z / 5.0f)));
+			bones.add(new Bone(boneTexture, new Vector3f(0.0f, 0.0f, 0.0f), rotX, rotY, rotZ,  new Vector3f(scale.x, scale.y, scale.z)));
 		}
 		Bone bone = bones.get(BType.HEAD_NECK.ordinal());
-		bone.addScale(0.0f, 0.7f, 0.0f);
+		bone.addScale(1.0f, 0.7f, 0.3f);
 		bone = bones.get(BType.NECK_CHEST.ordinal());
 		bone.addScale(0.0f, 0.7f, 0.0f);
 		bone = bones.get(BType.CHEST_HIP.ordinal());
@@ -106,13 +105,13 @@ public class Player extends Entity {
 		bone = bones.get(BType.NECK_UR_ARM.ordinal());
 		bone.addScale(0.0f, 0.5f, 0.0f);
 		bone = bones.get(BType.UL_L_ARM.ordinal());
-		bone.addScale(0.0f, 0.21f, 0.0f);
+		bone.addScale(0.0f, 0.21f, 0.4f);
 		bone = bones.get(BType.UL_R_ARM.ordinal());
-		bone.addScale(0.0f, 0.21f, 0.0f);
+		bone.addScale(0.0f, 0.21f, 0.4f);
 		bone = bones.get(BType.L_L_HAND.ordinal());
-		bone.addScale(0.0f, -0.1f, 0.0f);
+		bone.addScale(0.4f, -0.1f, 2.0f);
 		bone = bones.get(BType.L_R_HAND.ordinal());
-		bone.addScale(0.0f, -0.1f, 0.0f);
+		bone.addScale(0.0f, -0.1f, 1.0f);
 	}
 	
 	public void move(Terrain terrain) {
@@ -133,9 +132,9 @@ public class Player extends Entity {
 	
 		for (Joint joint : joints) {
 //			joint.setRotX(getRotX());
-			joint.setRotY(getRotY());
-//			joint.setRotZ(getRotZ());
+//			joint.setRotY(getRotY() + 10);
 			joint.setRotYP(getRotY());
+//			joint.setRotZ(getRotZ());
 		}
 		
 		for (Bone bone : bones) {
@@ -143,7 +142,6 @@ public class Player extends Entity {
 			bone.setRotY(getRotY());
 //			bone.setRotZ(getRotZ());
 		}
-		
 		bones.get(BType.HEAD_NECK.ordinal()).setPosition(joints.get(JType.NECK.ordinal()).getPosition());
 		bones.get(BType.NECK_CHEST.ordinal()).setPosition(joints.get(JType.CHEST.ordinal()).getPosition());
 		bones.get(BType.CHEST_HIP.ordinal()).setPosition(joints.get(JType.HIP.ordinal()).getPosition());
