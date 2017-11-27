@@ -9,7 +9,7 @@ public class Joint extends Entity {
 
 	private float rotYP;
 	private Vector3f offset = new Vector3f(0.0f, 0.0f, 0.0f);
-	public Joint(TexturedModel model, Vector3f position, float rotX, float rotY, float rotZ, float scale) {
+	public Joint(TexturedModel model, Vector3f position, float rotX, float rotY, float rotZ, Vector3f scale) {
 		super(model, position, rotX, rotY, rotZ, scale);
 	}
 	public Vector3f getOffset() {

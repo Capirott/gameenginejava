@@ -58,7 +58,7 @@ public class MainGameLoop {
 		List<Entity> entities = new ArrayList<Entity>();
 
 
-		Player player = new Player(jointModel, boneModel, new Vector3f(500, 0, 470), 0, 0, 0, 1.0f);
+		Player player = new Player(jointModel, boneModel, new Vector3f(500, 0, 470), 0, 0, 0, new Vector3f(1.0f, 1.0f, 1.0f));
 
 
 		Light light = new Light(new Vector3f(20000, 20000, 2000), new Vector3f(0.99f, 0.83f, 0.25f));
@@ -95,9 +95,9 @@ public class MainGameLoop {
 			for (Terrain terrain : terrains) {
 				renderer.processTerrain(terrain);
 			}
-			for (Entity entity : entities) {
+//			for (Entity entity : entities) {
 //				renderer.processEntity(entity);
-			}
+//			}
 			player.move(terrains.get(0));
 			renderer.processEntity(player);
 			renderer.render(light, camera);
@@ -115,7 +115,8 @@ public class MainGameLoop {
 		float x = random.nextFloat() * 800;
 		float z = random.nextFloat() * 600;
 		float y = terrains.get(0).getHeightOfTerrain(x, z) + heightOffSet;
-		return new Entity(model, new Vector3f(x, y, z), 0, 0, 0, minSize + maxSize * random.nextFloat());
+		float scale = minSize + maxSize * random.nextFloat();
+		return new Entity(model, new Vector3f(x, y, z), 0, 0, 0, new Vector3f(scale, scale, scale));
 	}
 
 }

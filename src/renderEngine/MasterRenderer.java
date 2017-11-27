@@ -68,6 +68,20 @@ public class MasterRenderer {
 	}
 
 	public void processEntity(Entity entity) {
+		addEntity(entity);
+	}
+	
+	public void processEntity(Player player) {
+		for (Entity entity : player.getJoints()) {
+			addEntity(entity);
+		}
+		for (Entity entity : player.getBones()) {
+			addEntity(entity);
+		}
+		
+	}
+
+	private void addEntity(Entity entity) {
 		TexturedModel entityModel = entity.getModel();
 		List<Entity> batch = entities.get(entityModel);
 		if (batch != null) {
@@ -76,20 +90,6 @@ public class MasterRenderer {
 			List<Entity> newBatch = new ArrayList<Entity>();
 			newBatch.add(entity);
 			entities.put(entityModel, newBatch);
-		}
-	}
-	
-	public void processEntity(Player player) {
-		for (Entity entity : player.getJoints()) {
-			TexturedModel entityModel = entity.getModel();
-			List<Entity> batch = entities.get(entityModel);
-			if (batch != null) {
-				batch.add(entity);
-			} else {
-				List<Entity> newBatch = new ArrayList<Entity>();
-				newBatch.add(entity);
-				entities.put(entityModel, newBatch);
-			}
 		}
 	}
 
