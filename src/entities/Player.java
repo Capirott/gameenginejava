@@ -55,6 +55,9 @@ public class Player extends Entity {
 		joint = joints.get(JType.CHEST.ordinal());
 		joint.setModel(jointInverted);
 		joint.increasePosition(new Vector3f(0.0f, 11.0f, 0.0f));	
+		joint = joints.get(JType.HIP.ordinal());
+		joint.setModel(jointInverted);
+		joint.increasePosition(new Vector3f(0.0f, 9.0f, 0.0f));
 		joint = joints.get(JType.UPPER_L_ARM.ordinal());
 		joint.increasePosition(new Vector3f(2.0f, 9.0f, 0.0f));			
 		joint = joints.get(JType.LOWER_L_ARM.ordinal());
@@ -67,8 +70,6 @@ public class Player extends Entity {
 		joint.increasePosition(new Vector3f(-3.0f, 7.0f, 0.0f));	
 		joint = joints.get(JType.R_HAND.ordinal());
 		joint.increasePosition(new Vector3f(-4.0f, 6.0f, 0.0f));;
-		joint = joints.get(JType.HIP.ordinal());
-		joint.increasePosition(new Vector3f(0.0f, 6.0f, 0.0f));
 		joint = joints.get(JType.UPPER_L_LEG.ordinal());
 		joint.increasePosition(new Vector3f(1.5f, 6.0f, 0.0f));	
 		joint = joints.get(JType.LOWER_L_LEG.ordinal());
