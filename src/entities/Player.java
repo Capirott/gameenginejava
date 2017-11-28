@@ -29,23 +29,6 @@ public class Player extends Entity {
 		LOWER_R_ARM,
 		R_HAND,
 		NECK,
-		HEAD
-	}
-	
-	enum BType {
-		HEAD_NECK,
-		NECK_CHEST,
-		CHEST_HIP,
-		UL_L_LEG,
-		UL_R_LEG,
-		L_L_FOOT,
-		L_R_FOOT,
-		NECK_UR_ARM,
-		NECK_UL_ARM,
-		UL_L_ARM,
-		UL_R_ARM,
-		L_L_HAND,
-		L_R_HAND
 	}
 	
 	private static final float RUN_SPEED = 200;
@@ -64,17 +47,22 @@ public class Player extends Entity {
 		super(null, position, rotX, rotY, rotZ, scale);
 
 		for (int i = 0; i < JType.values().length; ++i) {
-			joints.add(new Joint(jointTexture, new Vector3f(position.x, position.y, position.z), 0, 0, 0, new Vector3f(scale.x / 5.0f, scale.y / 5.0f , scale.z / 5.0f)));        				
+			joints.add(new Joint(jointTexture, new Vector3f(position.x, position.y, position.z), 0, 0, 0, new Vector3f(scale.x, scale.y, scale.z)));        				
 		}
-		joints.get(JType.HEAD.ordinal()).increasePosition(new Vector3f(0.0f, 14.0f, 0.0f));
-		joints.get(JType.NECK.ordinal()).increasePosition(new Vector3f(0.0f, 11.0f, 0.0f));			
+		Joint joint = joints.get(JType.NECK.ordinal());
+		joint.increasePosition(new Vector3f(0.0f, 13.0f, 0.0f));	
+		joint.increaseRotation(-180.0f, 0, 0);
+		joint.setInverted(true);
+		joint = joints.get(JType.CHEST.ordinal());
+		joint.increasePosition(new Vector3f(0.0f, 11.0f, 0.0f));	
+		joint.increaseRotation(-180.0f, 0, 0);
+		joint.setInverted(true);
 		joints.get(JType.UPPER_L_ARM.ordinal()).increasePosition(new Vector3f(2.0f, 9.0f, 0.0f));			
 		joints.get(JType.LOWER_L_ARM.ordinal()).increasePosition(new Vector3f(3.0f, 7.0f, 0.0f));			
 		joints.get(JType.L_HAND.ordinal()).increasePosition(new Vector3f(4.0f, 6.0f, 0.0f));
 		joints.get(JType.UPPER_R_ARM.ordinal()).increasePosition(new Vector3f(-2.0f, 9.0f, 0.0f));	
 		joints.get(JType.LOWER_R_ARM.ordinal()).increasePosition(new Vector3f(-3.0f, 7.0f, 0.0f));	
 		joints.get(JType.R_HAND.ordinal()).increasePosition(new Vector3f(-4.0f, 6.0f, 0.0f));;
-		joints.get(JType.CHEST.ordinal()).increasePosition(new Vector3f(0.0f, 8.0f, 0.0f));		
 		joints.get(JType.HIP.ordinal()).increasePosition(new Vector3f(0.0f, 6.0f, 0.0f));
 		joints.get(JType.UPPER_L_LEG.ordinal()).increasePosition(new Vector3f(1.5f, 6.0f, 0.0f));	
 		joints.get(JType.LOWER_L_LEG.ordinal()).increasePosition(new Vector3f(1.5f, 3.0f, 0.0f));	
@@ -85,7 +73,6 @@ public class Player extends Entity {
 	}
 	
 	public void move(Terrain terrain) {
-		System.out.println(getRotY());
 		checkInputs();
 		float rotY = currentTurnSpeed * DisplayManager.getFrameTimeSeconds();
 		super.increaseRotation(0, rotY, 0);
@@ -104,11 +91,9 @@ public class Player extends Entity {
 		}
 		posY = super.getPosition().y - posY;
 		for (Joint joint : joints) {
-//			joint.setRotX(getRotX());
-//			joint.setRotY(getRotY() + 10);	
 			joint.increasePosition(dx, (float)posY, dz);
 			joint.setPosition(Maths.rotateYWithAnchor(joint.getPosition(), getPosition(), rotY));
-//			joint.setRotZ(getRotZ());
+			joint.increaseRotation(0, rotY, 0);
 		}
 		
 	}

@@ -75,10 +75,6 @@ public class Entity {
 	public void setRotZ(float rotZ) {
 		this.rotation.z = rotZ;
 	}
-	
-	public Vector3f getRotation() {
-		return rotation;
-	}
 
 	public void setRotation(Vector3f rotation) {
 		this.rotation = rotation;
