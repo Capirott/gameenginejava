@@ -3,6 +3,7 @@ package toolbox;
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
+import org.lwjgl.util.vector.Vector4f;
 
 import entities.Camera;
 
@@ -17,7 +18,10 @@ public class Maths {
 		Matrix4f.scale(scale, matrix, matrix);
 		return matrix;
 	}
-
+	
+	public static Matrix4f createTransformationMatrix(Vector3f translation, Vector3f rotation, Vector3f scale) {
+		return createTransformationMatrix(translation, rotation.x, rotation.y, rotation.z, scale);
+	}
 	public static Matrix4f createViewMatrix(Camera camera) {
 		Matrix4f viewMatrix = new Matrix4f();
 		viewMatrix.setIdentity();

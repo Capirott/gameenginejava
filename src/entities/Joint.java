@@ -1,20 +1,37 @@
 package entities;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
 
 import models.TexturedModel;
+import toolbox.Maths;
 
 public class Joint extends Entity {
 
-	private boolean inverted;
+	List<Joint> childrenList = new ArrayList<Joint>();
 	
 	public Joint(TexturedModel model, Vector3f position, float rotX, float rotY, float rotZ, Vector3f scale) {
 		super(model, position, rotX, rotY, rotZ, scale);
 	}
 	
+	public List<Joint> getChildren() {
+		return childrenList;
+	}
+
+	public void setChildren(List<Joint> children) {
+		this.childrenList = children;
+	}
+	
+	public void addChildren(Joint children) {
+		this.childrenList.add(children);
+	}
+
 	@Override
-	public float getRotY() {
-		return (inverted ? 180.0f - super.getRotY() : super.getRotY());
+	public Matrix4f getTransformationMatrix() {
+		return super.getTransformationMatrix();
 	}
 	
 }

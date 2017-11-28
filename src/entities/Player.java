@@ -50,7 +50,8 @@ public class Player extends Entity {
 			joints.add(new Joint(jointTexture, new Vector3f(position.x, position.y, position.z), 0, 0, 0, new Vector3f(scale.x, scale.y, scale.z)));        				
 		}
 		Joint joint = joints.get(JType.NECK.ordinal());
-		joint.increasePosition(new Vector3f(0.0f, 13.0f, 0.0f));
+		joint.increasePosition(new Vector3f(0.0f, 13.3f, 0.0f));
+		joint.setRotation(new Vector3f(10.0f, 0.0f, 0.0f));
 		joint.setModel(jointInverted);
 		joint = joints.get(JType.CHEST.ordinal());
 		joint.setModel(jointInverted);
@@ -104,8 +105,6 @@ public class Player extends Entity {
 		posY = super.getPosition().y - posY;
 		for (Joint joint : joints) {
 			joint.increasePosition(dx, (float)posY, dz);
-			joint.setPosition(Maths.rotateYWithAnchor(joint.getPosition(), getPosition(), rotY));
-			joint.increaseRotation(0, rotY, 0);
 		}
 		
 	}

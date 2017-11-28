@@ -10,6 +10,8 @@ import org.lwjgl.opengl.GL30;
 import org.lwjgl.util.vector.Matrix4f;
 
 import entities.Entity;
+import entities.Joint;
+import entities.Player;
 import models.RawModel;
 import models.TexturedModel;
 import shaders.StaticShader;
@@ -58,8 +60,7 @@ public class EntityRenderer {
 	}
 	
 	private void prepareInstance(Entity entity) {
-		Matrix4f transformationMatrix = Maths.createTransformationMatrix(entity.getPosition(), entity.getRotX(), entity.getRotY(), entity.getRotZ(), entity.getScale());
-		shader.loadTransformationMatrix(transformationMatrix);
+		shader.loadTransformationMatrix(entity.getTransformationMatrix());
 	}
 	
 

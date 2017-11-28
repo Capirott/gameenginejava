@@ -1,14 +1,18 @@
 package entities;
 
+import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
 
 import models.TexturedModel;
+import toolbox.Maths;
 
 public class Entity {
-	private TexturedModel model;
-	private Vector3f position;
-	private Vector3f rotation = new Vector3f();
-	private Vector3f scale;
+	protected TexturedModel model;
+	protected Vector3f position;
+	protected Vector3f rotation = new Vector3f();
+	protected Vector3f scale;
+	protected Matrix4f transformationMatrix = new Matrix4f();
+	
 	
 	public Entity(TexturedModel model, Vector3f position, float rotX, float rotY, float rotZ, Vector3f scale) {
 		super();
@@ -18,6 +22,7 @@ public class Entity {
 		this.rotation.y = rotY;
 		this.rotation.z = rotZ;
 		this.scale = scale;
+		transformationMatrix.setIdentity();
 	}
 	
 	public void increasePosition(float dx, float dy, float dz) {
@@ -92,5 +97,10 @@ public class Entity {
 		scale.x += x;
 		scale.y += y;
 		scale.z += z;
-	}	
+	}
+	
+	public Matrix4f getTransformationMatrix() {
+		return Maths.createTransformationMatrix(position, rotation.x, rotation.y, rotation.z, scale);
+	}
+
 }
