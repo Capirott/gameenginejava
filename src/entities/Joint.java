@@ -7,7 +7,6 @@ import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
 
 import models.TexturedModel;
-import toolbox.Maths;
 
 public class Joint extends Entity {
 

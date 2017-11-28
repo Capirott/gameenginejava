@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.util.vector.Vector3f;
 
@@ -90,6 +91,7 @@ public class MainGameLoop {
 		}
 		
 		while (!Display.isCloseRequested()) {
+			processInput();
 			camera.move();
 
 			for (Terrain terrain : terrains) {
@@ -117,6 +119,12 @@ public class MainGameLoop {
 		float y = terrains.get(0).getHeightOfTerrain(x, z) + heightOffSet;
 		float scale = minSize + maxSize * random.nextFloat();
 		return new Entity(model, new Vector3f(x, y, z), 0, 0, 0, new Vector3f(scale, scale, scale));
+	}
+	
+	private static void processInput() {
+		if (Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)) {
+			System.exit(0);
+		}
 	}
 
 }
