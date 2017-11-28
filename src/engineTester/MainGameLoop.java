@@ -35,17 +35,17 @@ public class MainGameLoop {
 		ModelData data = OBJFileLoader.loadOBJ("tree");
 		ModelData data2 = OBJFileLoader.loadOBJ("fern");
 		ModelData data3 = OBJFileLoader.loadOBJ("grass");
-		ModelData data4 = OBJFileLoader.loadOBJ("bone");
+		ModelData data4 = OBJFileLoader.loadOBJ("joint_i");
 		ModelData data5 = OBJFileLoader.loadOBJ("joint");
 		
 		RawModel model = loader.loadToVAO(data.getVertices(), data.getTextureCoords(), data.getNormals(), data.getIndices());
 		RawModel fern = loader.loadToVAO(data2.getVertices(), data2.getTextureCoords(), data2.getNormals(), data2.getIndices());
 		RawModel grass = loader.loadToVAO(data3.getVertices(), data3.getTextureCoords(), data3.getNormals(), data3.getIndices());
-		RawModel bone = loader.loadToVAO(data4.getVertices(), data4.getTextureCoords(), data4.getNormals(), data4.getIndices()); 
+		RawModel joint_i = loader.loadToVAO(data4.getVertices(), data4.getTextureCoords(), data4.getNormals(), data4.getIndices()); 
 		RawModel joint = loader.loadToVAO(data5.getVertices(), data5.getTextureCoords(), data5.getNormals(), data5.getIndices());
 		
-		TexturedModel boneModel = new TexturedModel(bone, new ModelTexture(loader.loadTexture("brick")));
-		TexturedModel jointModel = new TexturedModel(joint, new ModelTexture(loader.loadTexture("grassy")));
+		TexturedModel joint_iModel = new TexturedModel(joint_i, new ModelTexture(loader.loadTexture("tree")));
+		TexturedModel jointModel = new TexturedModel(joint, new ModelTexture(loader.loadTexture("tree")));
 		TexturedModel staticModel = new TexturedModel(model, new ModelTexture(loader.loadTexture("tree")));
 		TexturedModel fernModel = new TexturedModel(fern, new ModelTexture(loader.loadTexture("fern")));
 		TexturedModel grassModel = new TexturedModel(grass, new ModelTexture(loader.loadTexture("grass2")));
@@ -58,7 +58,7 @@ public class MainGameLoop {
 		List<Entity> entities = new ArrayList<Entity>();
 
 
-		Player player = new Player(jointModel, boneModel, new Vector3f(500, 0, 470), 0, 0, 0, new Vector3f(1.0f, 1.0f, 1.0f));
+		Player player = new Player(jointModel, joint_iModel, new Vector3f(500, 0, 470), 0, 0, 0, new Vector3f(1.0f, 1.0f, 1.0f));
 
 
 		Light light = new Light(new Vector3f(20000, 20000, 2000), new Vector3f(0.99f, 0.83f, 0.25f));

@@ -43,20 +43,18 @@ public class Player extends Entity {
 
 	private List<Joint> joints = new ArrayList<Joint>();
 
-	public Player(TexturedModel jointTexture, TexturedModel boneTexture, Vector3f position, float rotX, float rotY, float rotZ, Vector3f scale) {
+	public Player(TexturedModel jointTexture, TexturedModel jointInverted, Vector3f position, float rotX, float rotY, float rotZ, Vector3f scale) {
 		super(null, position, rotX, rotY, rotZ, scale);
 
 		for (int i = 0; i < JType.values().length; ++i) {
 			joints.add(new Joint(jointTexture, new Vector3f(position.x, position.y, position.z), 0, 0, 0, new Vector3f(scale.x, scale.y, scale.z)));        				
 		}
 		Joint joint = joints.get(JType.NECK.ordinal());
-		joint.increasePosition(new Vector3f(0.0f, 13.0f, 0.0f));	
-		joint.increaseRotation(-180.0f, 0, 0);
-		joint.setInverted(true);
+		joint.increasePosition(new Vector3f(0.0f, 13.0f, 0.0f));
+		joint.setModel(jointInverted);
 		joint = joints.get(JType.CHEST.ordinal());
+		joint.setModel(jointInverted);
 		joint.increasePosition(new Vector3f(0.0f, 11.0f, 0.0f));	
-		joint.increaseRotation(-180.0f, 0, 0);
-		joint.setInverted(true);
 		joints.get(JType.UPPER_L_ARM.ordinal()).increasePosition(new Vector3f(2.0f, 9.0f, 0.0f));			
 		joints.get(JType.LOWER_L_ARM.ordinal()).increasePosition(new Vector3f(3.0f, 7.0f, 0.0f));			
 		joints.get(JType.L_HAND.ordinal()).increasePosition(new Vector3f(4.0f, 6.0f, 0.0f));
