@@ -75,10 +75,6 @@ public class MasterRenderer {
 		for (Entity entity : player.getJoints()) {
 			addEntity(entity);
 		}
-		for (Entity entity : player.getBones()) {
-			addEntity(entity);
-		}
-		
 	}
 
 	private void addEntity(Entity entity) {
