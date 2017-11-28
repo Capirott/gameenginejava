@@ -55,19 +55,32 @@ public class Player extends Entity {
 		joint = joints.get(JType.CHEST.ordinal());
 		joint.setModel(jointInverted);
 		joint.increasePosition(new Vector3f(0.0f, 11.0f, 0.0f));	
-		joints.get(JType.UPPER_L_ARM.ordinal()).increasePosition(new Vector3f(2.0f, 9.0f, 0.0f));			
-		joints.get(JType.LOWER_L_ARM.ordinal()).increasePosition(new Vector3f(3.0f, 7.0f, 0.0f));			
-		joints.get(JType.L_HAND.ordinal()).increasePosition(new Vector3f(4.0f, 6.0f, 0.0f));
-		joints.get(JType.UPPER_R_ARM.ordinal()).increasePosition(new Vector3f(-2.0f, 9.0f, 0.0f));	
-		joints.get(JType.LOWER_R_ARM.ordinal()).increasePosition(new Vector3f(-3.0f, 7.0f, 0.0f));	
-		joints.get(JType.R_HAND.ordinal()).increasePosition(new Vector3f(-4.0f, 6.0f, 0.0f));;
-		joints.get(JType.HIP.ordinal()).increasePosition(new Vector3f(0.0f, 6.0f, 0.0f));
-		joints.get(JType.UPPER_L_LEG.ordinal()).increasePosition(new Vector3f(1.5f, 6.0f, 0.0f));	
-		joints.get(JType.LOWER_L_LEG.ordinal()).increasePosition(new Vector3f(1.5f, 3.0f, 0.0f));	
-		joints.get(JType.L_FOOT.ordinal()).increasePosition(new Vector3f(1.5f, 0.0f, 0.0f));       	
-		joints.get(JType.UPPER_R_LEG.ordinal()).increasePosition(new Vector3f(-1.5f, 6.0f, 0.0f));	
-		joints.get(JType.LOWER_R_LEG.ordinal()).increasePosition(new Vector3f(-1.5f, 3.0f, 0.0f));	
-		joints.get(JType.R_FOOT.ordinal()).increasePosition(new Vector3f(-1.5f, 0.0f, 0.0f));			
+		joint = joints.get(JType.UPPER_L_ARM.ordinal());
+		joint.increasePosition(new Vector3f(2.0f, 9.0f, 0.0f));			
+		joint = joints.get(JType.LOWER_L_ARM.ordinal());
+		joint.increasePosition(new Vector3f(3.0f, 7.0f, 0.0f));			
+		joint = joints.get(JType.L_HAND.ordinal());
+		joint.increasePosition(new Vector3f(4.0f, 6.0f, 0.0f));
+		joint = joints.get(JType.UPPER_R_ARM.ordinal());
+		joint.increasePosition(new Vector3f(-2.0f, 9.0f, 0.0f));	
+		joint = joints.get(JType.LOWER_R_ARM.ordinal());
+		joint.increasePosition(new Vector3f(-3.0f, 7.0f, 0.0f));	
+		joint = joints.get(JType.R_HAND.ordinal());
+		joint.increasePosition(new Vector3f(-4.0f, 6.0f, 0.0f));;
+		joint = joints.get(JType.HIP.ordinal());
+		joint.increasePosition(new Vector3f(0.0f, 6.0f, 0.0f));
+		joint = joints.get(JType.UPPER_L_LEG.ordinal());
+		joint.increasePosition(new Vector3f(1.5f, 6.0f, 0.0f));	
+		joint = joints.get(JType.LOWER_L_LEG.ordinal());
+		joint.increasePosition(new Vector3f(1.5f, 3.0f, 0.0f));	
+		joint = joints.get(JType.L_FOOT.ordinal());
+		joint.increasePosition(new Vector3f(1.5f, 0.0f, 0.0f));       	
+		joint = joints.get(JType.UPPER_R_LEG.ordinal());
+		joint.increasePosition(new Vector3f(-1.5f, 6.0f, 0.0f));	
+		joint = joints.get(JType.LOWER_R_LEG.ordinal());
+		joint.increasePosition(new Vector3f(-1.5f, 3.0f, 0.0f));	
+		joint = joints.get(JType.R_FOOT.ordinal());
+		joint.increasePosition(new Vector3f(-1.5f, 0.0f, 0.0f));			
 	}
 	
 	public void move(Terrain terrain) {
