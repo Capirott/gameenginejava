@@ -3,6 +3,7 @@ package toolbox;
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
+import org.lwjgl.util.vector.Vector4f;
 
 import entities.Camera;
 
@@ -11,8 +12,8 @@ public class Maths {
 		Matrix4f matrix = new Matrix4f();
 		matrix.setIdentity();
 		Matrix4f.translate(translation, matrix, matrix);
-		Matrix4f.rotate((float) Math.toRadians(ry), new Vector3f(0, 1, 0), matrix, matrix);
 		Matrix4f.rotate((float) Math.toRadians(rx), new Vector3f(1, 0, 0), matrix, matrix);
+		Matrix4f.rotate((float) Math.toRadians(ry), new Vector3f(0, 1, 0), matrix, matrix);
 		Matrix4f.rotate((float) Math.toRadians(rz), new Vector3f(0, 0, 1), matrix, matrix);
 		Matrix4f.scale(scale, matrix, matrix);
 		return matrix;
@@ -41,9 +42,6 @@ public class Maths {
 	}
 	
 	public static Vector3f rotateYWithAnchor(Vector3f position, Vector3f anchor, float angle) {
-		if (angle != 0 && !position.equals(anchor)) {
-			System.out.println("");
-		}
 		Vector3f pReturn = new Vector3f();
 		angle = (float) Math.toRadians(angle);
 		pReturn.x = (float) (position.x * Math.cos(angle) + position.z * Math.sin(angle) -anchor.x * Math.cos(angle) - anchor.z * Math.sin(angle) + anchor.x);
@@ -52,9 +50,6 @@ public class Maths {
 		return pReturn;		
 	}
 	public static Vector3f rotateXWithAnchor(Vector3f position, Vector3f anchor, float angle) {
-		if (angle != 0 && !position.equals(anchor)) {
-			System.out.println("");
-		}
 		Vector3f pReturn = new Vector3f();
 		angle = (float) Math.toRadians(angle);
 		pReturn.x = position.x;
@@ -63,4 +58,21 @@ public class Maths {
 		return pReturn;		
 	}
 
+	public static Vector3f rotateZWithAnchor(Vector3f position, Vector3f anchor, float angle) {
+		Matrix4f matrix = new Matrix4f();
+		matrix.setIdentity();
+		matrix.translate(position);
+		Matrix4f rotationZ = new Matrix4f();
+		angle = (float) Math.toRadians(angle);
+		rotationZ.m00 = (float) Math.cos(angle);
+		rotationZ.m01 = (float) Math.sin(angle);
+		rotationZ.m10 = (float) -Math.sin(angle);
+		rotationZ.m11 = (float) Math.cos(angle);
+		Matrix4f.mul(matrix, rotationZ, matrix);
+		matrix.translate(position.negate(new Vector3f()));
+		Vector4f vec = new Vector4f(position.x, position.y, position.z, 1);
+		vec = Matrix4f.transform(matrix, vec, vec);
+		return new Vector3f(vec.x, vec.y, vec.z);		
+	}
+	
 }
