@@ -9,7 +9,6 @@ import org.lwjgl.util.vector.Vector3f;
 import models.TexturedModel;
 import renderEngine.DisplayManager;
 import terrains.Terrain;
-import toolbox.Maths;
 
 public class Player extends Entity {
 
@@ -28,9 +27,14 @@ public class Player extends Entity {
 		UPPER_R_ARM,
 		LOWER_R_ARM,
 		R_HAND,
-		NECK,
+		NECK;
+	    private static JType[] vals = values();
+		public JType next()
+	    {
+	        return vals[(this.ordinal()+1) % vals.length];
+	    }
 	}
-	
+	private JType jType = JType.HIP;
 	private static final float RUN_SPEED = 200;
 	private static final float TURN_SPEED = 160;
 	private static final float GRAVITY = -50;
@@ -50,39 +54,64 @@ public class Player extends Entity {
 			joints.add(new Joint(jointTexture, new Vector3f(position.x, position.y, position.z), 0, 0, 0, new Vector3f(scale.x, scale.y, scale.z)));        				
 		}
 		Joint joint = joints.get(JType.NECK.ordinal());
-		joint.increasePosition(new Vector3f(0.0f, 13.3f, 0.0f));
+		joint.increasePosition(0.0f, 9.5f, 0.0f);
 		joint.setRotation(new Vector3f(10.0f, 0.0f, 0.0f));
 		joint.setModel(jointInverted);
 		joint = joints.get(JType.CHEST.ordinal());
 		joint.setModel(jointInverted);
-		joint.increasePosition(new Vector3f(0.0f, 11.0f, 0.0f));	
+		joint.addChildren(joints.get(JType.UPPER_L_ARM.ordinal()));
+		joint.addChildren(joints.get(JType.UPPER_R_ARM.ordinal()));
+		joint.addChildren(joints.get(JType.NECK.ordinal()));
+		joint.increasePosition(0.0f, 7.5f, 0.0f);	
 		joint = joints.get(JType.HIP.ordinal());
 		joint.setModel(jointInverted);
-		joint.increasePosition(new Vector3f(0.0f, 9.0f, 0.0f));
+		joint.increasePosition(0.0f, 5.5f, 0.0f);
+		joint.addChildren(joints.get(JType.UPPER_L_LEG.ordinal()));
+		joint.addChildren(joints.get(JType.UPPER_R_LEG.ordinal()));
+		joint.addChildren(joints.get(JType.CHEST.ordinal()));
 		joint = joints.get(JType.UPPER_L_ARM.ordinal());
-		joint.increasePosition(new Vector3f(2.0f, 9.0f, 0.0f));			
+		joint.increaseRotation(0.0f, 0.0f, 42.0f);
+		joint.increasePosition(3.0f, 7.0f, 0.0f);			
+		joint.addChildren(joints.get(JType.LOWER_L_ARM.ordinal()));
 		joint = joints.get(JType.LOWER_L_ARM.ordinal());
-		joint.increasePosition(new Vector3f(3.0f, 7.0f, 0.0f));			
+		joint.increaseRotation(0.0f, 0.0f, 27.0f);
+		joint.increasePosition(4.0f, 5.0f, 0.0f);			
+		joint.addChildren(joints.get(JType.L_HAND.ordinal()));
 		joint = joints.get(JType.L_HAND.ordinal());
-		joint.increasePosition(new Vector3f(4.0f, 6.0f, 0.0f));
+		joint.increasePosition(4.0f, 3.7f, 0.0f);
+		joint.setScale(new Vector3f(1.0f, 0.6f, 1.0f));
 		joint = joints.get(JType.UPPER_R_ARM.ordinal());
-		joint.increasePosition(new Vector3f(-2.0f, 9.0f, 0.0f));	
+		joint.increaseRotation(0.0f, 0.0f, -42.0f);
+		joint.increasePosition(-3.0f, 7.0f, 0.0f);			
+		joint.addChildren(joints.get(JType.LOWER_R_ARM.ordinal()));
 		joint = joints.get(JType.LOWER_R_ARM.ordinal());
-		joint.increasePosition(new Vector3f(-3.0f, 7.0f, 0.0f));	
+		joint.increaseRotation(0.0f, 0.0f, -27.0f);
+		joint.increasePosition(-4.0f, 5.0f, 0.0f);			
+		joint.addChildren(joints.get(JType.R_HAND.ordinal()));
 		joint = joints.get(JType.R_HAND.ordinal());
-		joint.increasePosition(new Vector3f(-4.0f, 6.0f, 0.0f));;
+		joint.increasePosition(-4.0f, 3.7f, 0.0f);
+		joint.setScale(new Vector3f(1.0f, 0.6f, 1.0f));
 		joint = joints.get(JType.UPPER_L_LEG.ordinal());
-		joint.increasePosition(new Vector3f(1.5f, 6.0f, 0.0f));	
+		joint.increasePosition(1.5f, 2.5f, 0.0f);	
+		joint.addChildren(joints.get(JType.LOWER_L_LEG.ordinal()));
 		joint = joints.get(JType.LOWER_L_LEG.ordinal());
-		joint.increasePosition(new Vector3f(1.5f, 3.0f, 0.0f));	
+		joint.increasePosition(1.5f, 0.5f, 0.0f);	
+		joint.addChildren(joints.get(JType.L_FOOT.ordinal()));
 		joint = joints.get(JType.L_FOOT.ordinal());
-		joint.increasePosition(new Vector3f(1.5f, 0.0f, 0.0f));       	
+		joint.increasePosition(1.5f, 0.5f, 2.3f); 
+		joint.increaseRotation(-90.0f, 0.0f, 0.0f);
 		joint = joints.get(JType.UPPER_R_LEG.ordinal());
-		joint.increasePosition(new Vector3f(-1.5f, 6.0f, 0.0f));	
+		joint.increasePosition(-1.5f, 2.5f, 0.0f);	
+		joint.addChildren(joints.get(JType.LOWER_R_LEG.ordinal()));
 		joint = joints.get(JType.LOWER_R_LEG.ordinal());
-		joint.increasePosition(new Vector3f(-1.5f, 3.0f, 0.0f));	
+		joint.increasePosition(-1.5f, 0.5f, 0.0f);	
+		joint.addChildren(joints.get(JType.R_FOOT.ordinal()));
 		joint = joints.get(JType.R_FOOT.ordinal());
-		joint.increasePosition(new Vector3f(-1.5f, 0.0f, 0.0f));			
+		joint.increasePosition(-1.5f, 0.5f, 2.3f);	
+		joint.increaseRotation(-90.0f, 0.0f, 0.0f);
+		for (int i = 0; i < JType.values().length; ++i) {
+			joints.get(i).setUpdateChildren(true);
+		}
 	}
 	
 	public void move(Terrain terrain) {
@@ -103,12 +132,45 @@ public class Player extends Entity {
 			super.getPosition().y = terrainHeight;
 		}
 		posY = super.getPosition().y - posY;
-		for (Joint joint : joints) {
-			joint.increasePosition(dx, (float)posY, dz);
-		}
-		
+		Joint joint = joints.get(JType.HIP.ordinal());
+		joint.increasePosition(dx, (float)posY, dz);
+		joint.increaseRotation(0, rotY, 0);
 	}
 
+	private void rotate(float x, float y, float z) {
+		Joint joint = joints.get(jType.ordinal());
+		joint.increaseRotation(x, y, z);
+		switch (jType) {
+		case CHEST:
+			break;
+		case HIP:
+			break;
+		case LOWER_L_ARM:
+			break;
+		case LOWER_L_LEG:
+			break;
+		case LOWER_R_ARM:
+			break;
+		case LOWER_R_LEG:
+			break;
+		case L_FOOT:
+			break;
+		case L_HAND:
+			break;
+		case NECK:
+			break;
+		case UPPER_L_ARM:
+			break;
+		case UPPER_L_LEG:
+			break;
+		case UPPER_R_ARM:
+			break;
+		case UPPER_R_LEG:
+			break;
+		default:
+			break;
+		}
+	}
 
 	private void jump() {
 		if (!isInAir) {
@@ -126,16 +188,32 @@ public class Player extends Entity {
 			this.currentSpeed = 0;
 		}
 
-		if (Keyboard.isKeyDown(Keyboard.KEY_D)) {
+		if (Keyboard.isKeyDown(Keyboard.KEY_D) || (Keyboard.isKeyDown(Keyboard.KEY_NUMPAD6) && jType == JType.HIP)) {
 			this.currentTurnSpeed = -TURN_SPEED;
-		} else if (Keyboard.isKeyDown(Keyboard.KEY_A)) {
+			return;
+		} else if (Keyboard.isKeyDown(Keyboard.KEY_A) || (Keyboard.isKeyDown(Keyboard.KEY_NUMPAD4) && jType == JType.HIP)) {
 			this.currentTurnSpeed = TURN_SPEED;
+			return;
 		} else {
 			this.currentTurnSpeed = 0;
 		}
 
 		if (Keyboard.isKeyDown(Keyboard.KEY_SPACE)) {
 			jump();
+		} else if (Keyboard.isKeyDown(Keyboard.KEY_NUMPAD5)){
+			jType = jType.next();
+		} else if (Keyboard.isKeyDown(Keyboard.KEY_NUMPAD8)){
+			rotate(2.0f, 0.0f, 0.0f);
+		} else if (Keyboard.isKeyDown(Keyboard.KEY_NUMPAD2)){
+			rotate(-2.0f, 0.0f, 0.0f);
+		} else if (Keyboard.isKeyDown(Keyboard.KEY_NUMPAD4)){
+			rotate(0.0f, 2.0f, 0.0f);
+		} else if (Keyboard.isKeyDown(Keyboard.KEY_NUMPAD6)){
+			rotate(0.0f, -2.0f, 0.0f);
+		} else if (Keyboard.isKeyDown(Keyboard.KEY_NUMPAD9)){
+			rotate(0.0f, -0.0f, -2.0f);
+		} else if (Keyboard.isKeyDown(Keyboard.KEY_NUMPAD3)){
+			rotate(0.0f, 0.0f, -2.0f);
 		}
 	}
 

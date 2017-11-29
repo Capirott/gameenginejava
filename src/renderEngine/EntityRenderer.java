@@ -10,13 +10,10 @@ import org.lwjgl.opengl.GL30;
 import org.lwjgl.util.vector.Matrix4f;
 
 import entities.Entity;
-import entities.Joint;
-import entities.Player;
 import models.RawModel;
 import models.TexturedModel;
 import shaders.StaticShader;
 import textures.ModelTexture;
-import toolbox.Maths;
 
 public class EntityRenderer {
 
