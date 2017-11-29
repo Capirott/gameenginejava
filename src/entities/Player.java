@@ -46,6 +46,7 @@ public class Player extends Entity {
 	private boolean isInAir = false;
 
 	private List<Joint> joints = new ArrayList<Joint>();
+	private boolean isKeyPressed;
 
 	public Player(TexturedModel jointTexture, TexturedModel jointInverted, Vector3f position, float rotX, float rotY, float rotZ, Vector3f scale) {
 		super(null, position, rotX, rotY, rotZ, scale);
@@ -54,7 +55,7 @@ public class Player extends Entity {
 			joints.add(new Joint(jointTexture, new Vector3f(position.x, position.y, position.z), 0, 0, 0, new Vector3f(scale.x, scale.y, scale.z)));        				
 		}
 		Joint joint = joints.get(JType.NECK.ordinal());
-		joint.increasePosition(0.0f, 9.5f, 0.0f);
+		joint.increasePosition(0.0f, 10.1f, 0.0f);
 		joint.setRotation(new Vector3f(10.0f, 0.0f, 0.0f));
 		joint.setModel(jointInverted);
 		joint = joints.get(JType.CHEST.ordinal());
@@ -62,7 +63,7 @@ public class Player extends Entity {
 		joint.addChildren(joints.get(JType.UPPER_L_ARM.ordinal()));
 		joint.addChildren(joints.get(JType.UPPER_R_ARM.ordinal()));
 		joint.addChildren(joints.get(JType.NECK.ordinal()));
-		joint.increasePosition(0.0f, 7.5f, 0.0f);	
+		joint.increasePosition(0.0f, 7.8f, 0.0f);	
 		joint = joints.get(JType.HIP.ordinal());
 		joint.setModel(jointInverted);
 		joint.increasePosition(0.0f, 5.5f, 0.0f);
@@ -140,36 +141,6 @@ public class Player extends Entity {
 	private void rotate(float x, float y, float z) {
 		Joint joint = joints.get(jType.ordinal());
 		joint.increaseRotation(x, y, z);
-		switch (jType) {
-		case CHEST:
-			break;
-		case HIP:
-			break;
-		case LOWER_L_ARM:
-			break;
-		case LOWER_L_LEG:
-			break;
-		case LOWER_R_ARM:
-			break;
-		case LOWER_R_LEG:
-			break;
-		case L_FOOT:
-			break;
-		case L_HAND:
-			break;
-		case NECK:
-			break;
-		case UPPER_L_ARM:
-			break;
-		case UPPER_L_LEG:
-			break;
-		case UPPER_R_ARM:
-			break;
-		case UPPER_R_LEG:
-			break;
-		default:
-			break;
-		}
 	}
 
 	private void jump() {
@@ -200,8 +171,10 @@ public class Player extends Entity {
 
 		if (Keyboard.isKeyDown(Keyboard.KEY_SPACE)) {
 			jump();
-		} else if (Keyboard.isKeyDown(Keyboard.KEY_NUMPAD5)){
+		} else if (Keyboard.isKeyDown(Keyboard.KEY_NUMPAD5) && !isKeyPressed){
 			jType = jType.next();
+			isKeyPressed = true;
+			System.out.println("Joint changed to: " + jType.toString());
 		} else if (Keyboard.isKeyDown(Keyboard.KEY_NUMPAD8)){
 			rotate(2.0f, 0.0f, 0.0f);
 		} else if (Keyboard.isKeyDown(Keyboard.KEY_NUMPAD2)){
@@ -209,11 +182,16 @@ public class Player extends Entity {
 		} else if (Keyboard.isKeyDown(Keyboard.KEY_NUMPAD4)){
 			rotate(0.0f, 2.0f, 0.0f);
 		} else if (Keyboard.isKeyDown(Keyboard.KEY_NUMPAD6)){
+			if (jType == JType.NECK) {
+				System.out.println("X: " + joints.get(jType.ordinal()).getRotX() + "Y: " + joints.get(jType.ordinal()).getRotY() + "Z: " + joints.get(jType.ordinal()).getRotZ());
+			}
 			rotate(0.0f, -2.0f, 0.0f);
 		} else if (Keyboard.isKeyDown(Keyboard.KEY_NUMPAD9)){
-			rotate(0.0f, -0.0f, -2.0f);
+			rotate(0.0f, -0.0f, 2.0f);
 		} else if (Keyboard.isKeyDown(Keyboard.KEY_NUMPAD3)){
 			rotate(0.0f, 0.0f, -2.0f);
+		} else if (!Keyboard.isKeyDown(Keyboard.KEY_NUMPAD5)) {
+			isKeyPressed = false;
 		}
 	}
 

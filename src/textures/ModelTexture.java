@@ -53,6 +53,4 @@ public class ModelTexture {
 	public void setUseFakeLighting(boolean useFakeLightning) {
 		this.useFakeLighting = useFakeLightning;
 	}
-	
-	
 }

@@ -5,7 +5,7 @@ import org.lwjgl.util.vector.Vector3f;
 
 public class Camera {
 
-	private float distanceFromPlayer = 50;
+	private float distanceFromPlayer = 30;
 	private float angleAroundPlayer = 0;
 	
 	private Vector3f position = new Vector3f(0.0f, 0.0f, 0.0f);
