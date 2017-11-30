@@ -61,7 +61,7 @@ public class Maths {
 	public static Vector3f rotateZWithAnchor(Vector3f position, Vector3f anchor, float angle) {
 		Matrix4f matrix = new Matrix4f();
 		matrix.setIdentity();
-		matrix.translate(position);
+		matrix.translate(anchor);
 		Matrix4f rotationZ = new Matrix4f();
 		angle = (float) Math.toRadians(angle);
 		rotationZ.m00 = (float) Math.cos(angle);
@@ -69,7 +69,7 @@ public class Maths {
 		rotationZ.m10 = (float) -Math.sin(angle);
 		rotationZ.m11 = (float) Math.cos(angle);
 		Matrix4f.mul(matrix, rotationZ, matrix);
-		matrix.translate(position.negate(new Vector3f()));
+		matrix.translate(anchor.negate(new Vector3f()));
 		Vector4f vec = new Vector4f(position.x, position.y, position.z, 1);
 		vec = Matrix4f.transform(matrix, vec, vec);
 		return new Vector3f(vec.x, vec.y, vec.z);		
