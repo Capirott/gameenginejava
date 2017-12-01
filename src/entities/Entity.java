@@ -1,5 +1,8 @@
 package entities;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
 
@@ -8,37 +11,48 @@ import toolbox.Maths;
 
 public class Entity {
 	protected TexturedModel model;
-	protected Vector3f position;
+	protected Vector3f position = new Vector3f();
 	protected Vector3f rotation = new Vector3f();
-	protected Vector3f scale;
 	protected Matrix4f transformationMatrix = new Matrix4f();
+	List<Joint> childrenList = new ArrayList<Joint>();
+	boolean updateChildren = false;
+	
 	
 	
 	public Entity(TexturedModel model, Vector3f position, float rotX, float rotY, float rotZ, Vector3f scale) {
 		super();
-		this.model = model;
 		this.position = position;
+		this.model = model;
 		this.rotation.x = rotX;
 		this.rotation.y = rotY;
 		this.rotation.z = rotZ;
-		this.scale = scale;
 		transformationMatrix.setIdentity();
+		transformationMatrix.translate(position);
+		transformationMatrix.scale(scale);
 	}
 	
 	public void increasePosition(float dx, float dy, float dz) {
-		this.position.x += dx;
-		this.position.y += dy;
-		this.position.z += dz;
+		Matrix4f trans = new Matrix4f();
+		trans.setIdentity();
+		trans.translate(new Vector3f(dx, dy, dz));
+		Matrix4f.mul(trans, transformationMatrix, transformationMatrix);
+		this.position.translate(dx, dy, dz);
 	}
 	
 	public void increasePosition(Vector3f pos) {
-		Vector3f.add(this.position, pos, this.position);
+		increasePosition(pos);
+	}
+	
+	public List<Joint> getChildren() {
+		return childrenList;
 	}
 
-	public void increaseRotation(float dx, float dy, float dz) {
-		this.rotation.x += dx;
-		this.rotation.y += dy;
-		this.rotation.z += dz;
+	public void setChildren(List<Joint> children) {
+		this.childrenList = children;
+	}
+	
+	public void addChildren(Joint children) {
+		this.childrenList.add(children);
 	}
 	
 	public TexturedModel getModel() {
@@ -49,58 +63,82 @@ public class Entity {
 		this.model = model;
 	}
 
-	public Vector3f getPosition() {
-		return position;
-	}
-
-	public void setPosition(Vector3f position) {
-		this.position = position;
-	}
-
 	public float getRotX() {
 		return rotation.x;
-	}
-
-	public void setRotX(float rotX) {
-		this.rotation.y = rotX;
 	}
 
 	public float getRotY() {
 		return rotation.y;
 	}
 
-	public void setRotY(float rotY) {
-		this.rotation.y = rotY;
-	}
-
 	public float getRotZ() {
 		return rotation.z;
 	}
 
-	public void setRotZ(float rotZ) {
-		this.rotation.z = rotZ;
-	}
-
-	public void setRotation(Vector3f rotation) {
-		this.rotation = rotation;
-	}
-
-	public Vector3f getScale() {
-		return scale;
-	}
-
-	public void setScale(Vector3f scale) {
-		this.scale = scale;
-	}	
 	
 	public void addScale(float x, float y, float z) {
-		scale.x += x;
-		scale.y += y;
-		scale.z += z;
+		transformationMatrix.scale(new Vector3f(x, y, z));
 	}
 	
 	public Matrix4f getTransformationMatrix() {
-		return Maths.createTransformationMatrix(position, rotation.x, rotation.y, rotation.z, scale);
+		return transformationMatrix;
 	}
+	
+	public void rotateAroundX(float angle, Vector3f anchor) {
+		rotation.x += angle;
+		if (anchor == null) {
+			anchor = position;
+			Matrix4f.mul(Maths.getTransMatrixX(position, angle), transformationMatrix, transformationMatrix);
+		} else {
+			Matrix4f trans = Maths.getTransMatrixX(anchor, angle);
+			Matrix4f.mul(trans, transformationMatrix, transformationMatrix);
 
+		}
+		position = Maths.rotateXWithAnchor(position, anchor, angle);
+		if (updateChildren) {
+			for (Joint joint : childrenList) {
+				joint.rotateAroundX(angle, anchor);
+			}
+		}
+	}
+	
+	public void rotateAroundY(float angle, Vector3f anchor) {
+		rotation.y += angle;
+		if (anchor == null) {
+			anchor = position;
+			Matrix4f.mul(Maths.getTransMatrixY(position, angle), transformationMatrix, transformationMatrix);
+		} else {
+
+			Matrix4f trans = Maths.getTransMatrixY(anchor, angle);
+			Matrix4f.mul(trans, transformationMatrix, transformationMatrix);
+		}
+		position = Maths.rotateYWithAnchor(position, anchor, angle);
+		if (updateChildren) {
+			for (Joint joint : childrenList) {
+				joint.rotateAroundY(angle, anchor);
+			}
+		}
+	}
+	
+	public void rotateAroundZ(float angle, Vector3f anchor) {
+		rotation.z += angle;
+		if (anchor == null) {
+			anchor = position;
+			Matrix4f.mul(Maths.getTransMatrixZ(position, angle), transformationMatrix, transformationMatrix);
+		} else {
+			Matrix4f trans = Maths.getTransMatrixZ(anchor, angle);
+			Matrix4f.mul(trans, transformationMatrix, transformationMatrix);
+		}
+		position = Maths.rotateZWithAnchor(position, anchor, angle);
+		if (updateChildren) {
+			for (Joint joint : childrenList) {
+				joint.rotateAroundZ(angle, anchor);
+			}
+		}
+	}
+	
+	public Vector3f getPosition() {
+		return position;
+	}
+	
 }

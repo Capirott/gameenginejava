@@ -59,7 +59,7 @@ public class MainGameLoop {
 		List<Entity> entities = new ArrayList<Entity>();
 
 
-		Player player = new Player(jointModel, joint_iModel, new Vector3f(500, 0, 470), 0, 0, 0, new Vector3f(1.0f, 1.0f, 1.0f));
+		Player player = new Player(jointModel, joint_iModel, new Vector3f(0, 0, 0), 0, 0, 0, new Vector3f(1.0f, 1.0f, 1.0f));
 
 
 		Light light = new Light(new Vector3f(20000, 20000, 2000), new Vector3f(0.99f, 0.83f, 0.25f));
@@ -74,7 +74,7 @@ public class MainGameLoop {
 		TerrainTexturePack texturePack = new TerrainTexturePack(backgroundTexture, rTexture, gTexture, bTexture);
 		
 		Camera camera = new Camera(player);
-		camera.setPosition(new Vector3f(500, 30, 600));
+		camera.setPosition(new Vector3f(0, 30, 0));
 		MasterRenderer renderer = new MasterRenderer();
 
 		for (int i = 0; i < 1; ++i) {

@@ -40,39 +40,56 @@ public class Maths {
 		float l3 = 1.0f - l1 - l2;
 		return l1 * p1.y + l2 * p2.y + l3 * p3.y;
 	}
-	
-	public static Vector3f rotateYWithAnchor(Vector3f position, Vector3f anchor, float angle) {
-		Vector3f pReturn = new Vector3f();
-		angle = (float) Math.toRadians(angle);
-		pReturn.x = (float) (position.x * Math.cos(angle) + position.z * Math.sin(angle) -anchor.x * Math.cos(angle) - anchor.z * Math.sin(angle) + anchor.x);
-		pReturn.y = position.y;
-		pReturn.z = (float) (-position.x * Math.sin(angle) + position.z * Math.cos(angle) + anchor.x * Math.sin(angle) - anchor.z * Math.cos(angle) + anchor.z);
-		return pReturn;		
-	}
-	public static Vector3f rotateXWithAnchor(Vector3f position, Vector3f anchor, float angle) {
-		Vector3f pReturn = new Vector3f();
-		angle = (float) Math.toRadians(angle);
-		pReturn.x = position.x;
-		pReturn.y = (float) (position.y * Math.cos(angle) - position.z * Math.sin(angle) + anchor.y * (1 - Math.cos(angle)) + anchor.z * Math.sin(angle));
-		pReturn.z = (float) (position.y * Math.sin(angle) + position.z * Math.cos(angle) + anchor.z * (1 - Math.cos(angle)) - anchor.y * Math.sin(angle));
-		return pReturn;		
-	}
 
-	public static Vector3f rotateZWithAnchor(Vector3f position, Vector3f anchor, float angle) {
-		Matrix4f matrix = new Matrix4f();
-		matrix.setIdentity();
-		matrix.translate(anchor);
-		Matrix4f rotationZ = new Matrix4f();
-		angle = (float) Math.toRadians(angle);
-		rotationZ.m00 = (float) Math.cos(angle);
-		rotationZ.m01 = (float) Math.sin(angle);
-		rotationZ.m10 = (float) -Math.sin(angle);
-		rotationZ.m11 = (float) Math.cos(angle);
-		Matrix4f.mul(matrix, rotationZ, matrix);
-		matrix.translate(anchor.negate(new Vector3f()));
+	public static Vector3f rotateXWithAnchor(Vector3f position, Vector3f anchor, float angle) {
+		Matrix4f matrix = getTransMatrixX(anchor, angle);
 		Vector4f vec = new Vector4f(position.x, position.y, position.z, 1);
 		vec = Matrix4f.transform(matrix, vec, vec);
 		return new Vector3f(vec.x, vec.y, vec.z);		
 	}
+
+	public static Matrix4f getTransMatrixX(Vector3f anchor, float angle) {
+		Matrix4f matrix = new Matrix4f();
+		matrix.setIdentity();
+		matrix.translate(anchor);	
+		angle = (float) Math.toRadians(angle);
+		matrix.rotate(angle, new Vector3f(1, 0, 0));
+		matrix.translate(anchor.negate(new Vector3f()));
+		return matrix;
+	}
+
+	public static Matrix4f getTransMatrixY(Vector3f anchor, float angle) {
+		Matrix4f matrix = new Matrix4f();
+		matrix.setIdentity();
+		matrix.translate(anchor);	
+		angle = (float) Math.toRadians(angle);
+		matrix.rotate(angle, new Vector3f(0, 1, 0));
+		matrix.translate(anchor.negate(new Vector3f()));
+		return matrix;
+	}
 	
+	public static Vector3f rotateYWithAnchor(Vector3f position, Vector3f anchor, float angle) {
+		Matrix4f matrix = getTransMatrixY(anchor, angle);
+		Vector4f vec = new Vector4f(position.x, position.y, position.z, 1);
+		vec = Matrix4f.transform(matrix, vec, vec);
+		return new Vector3f(vec.x, vec.y, vec.z);			
+	}
+
+	public static Matrix4f getTransMatrixZ(Vector3f anchor, float angle) {
+		Matrix4f matrix = new Matrix4f();
+		matrix.setIdentity();
+		matrix.translate(anchor);	
+		angle = (float) Math.toRadians(angle);
+		matrix.rotate(angle, new Vector3f(0, 0, 1));
+		matrix.translate(anchor.negate(new Vector3f()));
+		return matrix;
+	}
+
+	public static Vector3f rotateZWithAnchor(Vector3f position, Vector3f anchor, float angle) {
+		Matrix4f matrix = getTransMatrixZ(anchor, angle);
+		Vector4f vec = new Vector4f(position.x, position.y, position.z, 1);
+		vec = Matrix4f.transform(matrix, vec, vec);
+		return new Vector3f(vec.x, vec.y, vec.z);		
+	}
+
 }

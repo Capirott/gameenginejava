@@ -39,7 +39,6 @@ public class Player extends Entity {
 	private static final float TURN_SPEED = 160;
 	private static final float GRAVITY = -50;
 	private static final float JUMP_POWER = 30;
-	
 	private float currentSpeed = 0;
 	private float currentTurnSpeed = 0;
 	private float upwardsSpeed = 0;
@@ -50,13 +49,12 @@ public class Player extends Entity {
 
 	public Player(TexturedModel jointTexture, TexturedModel jointInverted, Vector3f position, float rotX, float rotY, float rotZ, Vector3f scale) {
 		super(null, position, rotX, rotY, rotZ, scale);
-	
+
 		for (int i = 0; i < JType.values().length; ++i) {
 			joints.add(new Joint(jointTexture, new Vector3f(position.x, position.y, position.z), 0, 0, 0, new Vector3f(scale.x, scale.y, scale.z)));        				
 		}
 		Joint joint = joints.get(JType.NECK.ordinal());
-		joint.increasePosition(0.0f, 10.1f, 0.0f);
-		joint.setRotation(new Vector3f(40.0f, 0.0f, 0.0f));
+		joint.increasePosition(0.0f, 10.0f, 0.0f);
 		joint.setModel(jointInverted);
 		joint = joints.get(JType.CHEST.ordinal());
 		joint.setModel(jointInverted);
@@ -65,33 +63,33 @@ public class Player extends Entity {
 		joint.addChildren(joints.get(JType.NECK.ordinal()));
 		joint.increasePosition(0.0f, 7.8f, 0.0f);	
 		joint = joints.get(JType.HIP.ordinal());
-		joint.setModel(jointInverted);
 		joint.increasePosition(0.0f, 5.5f, 0.0f);
+		joint.setModel(jointInverted);
 		joint.addChildren(joints.get(JType.UPPER_L_LEG.ordinal()));
 		joint.addChildren(joints.get(JType.UPPER_R_LEG.ordinal()));
 		joint.addChildren(joints.get(JType.CHEST.ordinal()));
 		joint = joints.get(JType.UPPER_L_ARM.ordinal());
-		joint.increaseRotation(0.0f, 0.0f, 42.0f);
+		joint.rotateAroundZ(42.0f, null);
 		joint.increasePosition(2.0f, 7.0f, 0.0f);			
 		joint.addChildren(joints.get(JType.LOWER_L_ARM.ordinal()));
 		joint = joints.get(JType.LOWER_L_ARM.ordinal());
-		joint.increaseRotation(0.0f, 0.0f, 27.0f);
+		joint.rotateAroundZ(27.0f, null);
 		joint.increasePosition(3.55f, 5.28f, 0.0f);			
 		joint.addChildren(joints.get(JType.L_HAND.ordinal()));
 		joint = joints.get(JType.L_HAND.ordinal());
 		joint.increasePosition(4.6f, 3.2f, 0.0f);
-		joint.setScale(new Vector3f(1.0f, 0.6f, 1.0f));
+		joint.addScale(1.0f, 0.6f, 1.0f);
 		joint = joints.get(JType.UPPER_R_ARM.ordinal());
-		joint.increaseRotation(0.0f, 0.0f, -42.0f);
+		joint.rotateAroundZ(-42.0f, null);
 		joint.increasePosition(-2.0f, 7.0f, 0.0f);			
 		joint.addChildren(joints.get(JType.LOWER_R_ARM.ordinal()));
 		joint = joints.get(JType.LOWER_R_ARM.ordinal());
-		joint.increaseRotation(0.0f, 0.0f, -27.0f);
+		joint.rotateAroundZ(-27.0f, null);
 		joint.increasePosition(-3.55f, 5.28f, 0.0f);			
 		joint.addChildren(joints.get(JType.R_HAND.ordinal()));
 		joint = joints.get(JType.R_HAND.ordinal());
 		joint.increasePosition(-4.6f, 3.2f, 0.0f);
-		joint.setScale(new Vector3f(1.0f, 0.6f, 1.0f));
+		joint.addScale(1.0f, 0.6f, 1.0f);
 		joint = joints.get(JType.UPPER_L_LEG.ordinal());
 		joint.increasePosition(1.5f, 4.5f, 0.0f);	
 		joint.addChildren(joints.get(JType.LOWER_L_LEG.ordinal()));
@@ -100,7 +98,7 @@ public class Player extends Entity {
 		joint.addChildren(joints.get(JType.L_FOOT.ordinal()));
 		joint = joints.get(JType.L_FOOT.ordinal());
 		joint.increasePosition(1.5f, 0.0f, 0.0f); 
-		joint.increaseRotation(-90.0f, 0.0f, 0.0f);
+		joint.rotateAroundX(-90.0f, null);
 		joint = joints.get(JType.UPPER_R_LEG.ordinal());
 		joint.increasePosition(-1.5f, 4.5f, 0.0f);	
 		joint.addChildren(joints.get(JType.LOWER_R_LEG.ordinal()));
@@ -109,7 +107,7 @@ public class Player extends Entity {
 		joint.addChildren(joints.get(JType.R_FOOT.ordinal()));
 		joint = joints.get(JType.R_FOOT.ordinal());
 		joint.increasePosition(-1.5f, 0.0f, 0.0f);	
-		joint.increaseRotation(-90.0f, 0.0f, 0.0f);
+		joint.rotateAroundX(-90.0f, null);
 		for (int i = 0; i < JType.values().length; ++i) {
 			joints.get(i).setUpdateChildren(true);
 		}
@@ -118,7 +116,7 @@ public class Player extends Entity {
 	public void move(Terrain terrain) {
 		checkInputs();
 		float rotY = currentTurnSpeed * DisplayManager.getFrameTimeSeconds();
-		super.increaseRotation(0, rotY, 0);
+		super.rotateAroundY(rotY, null);
 		float distance = currentSpeed * DisplayManager.getFrameTimeSeconds();
 		float dx = (float) (distance * Math.sin(Math.toRadians(super.getRotY())));
 		float dz = (float) (distance * Math.cos(Math.toRadians(super.getRotY())));
@@ -135,12 +133,18 @@ public class Player extends Entity {
 		posY = super.getPosition().y - posY;
 		Joint joint = joints.get(JType.HIP.ordinal());
 		joint.increasePosition(dx, (float)posY, dz);
-		joint.increaseRotation(0, rotY, 0);
+		joint.rotateAroundY(rotY, null);
 	}
 
 	private void rotate(float x, float y, float z) {
 		Joint joint = joints.get(jType.ordinal());
-		joint.increaseRotation(x, y, z);
+		if (x != 0) {
+			joint.rotateAroundX(x, null);
+		} else if (y != 0) {
+			joint.rotateAroundY(y, null);
+		} else {
+			joint.rotateAroundZ(z, null);
+		}
 	}
 
 	private void jump() {
