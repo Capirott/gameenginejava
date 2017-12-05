@@ -37,19 +37,6 @@ public class Loader {
 		return new RawModel(vaoID, indices.length);
 	}
 
-	public RawModel loadToVAO(FloatBuffer positions, FloatBuffer textureCoords, FloatBuffer normals, IntBuffer indices) {
-		int vaoID = createVAO();
-		bindIndicesBuffer(indices);
-		
-		storeDataInAttributeList(0, 3, positions);
-		storeDataInAttributeList(1, 2, textureCoords);
-		storeDataInAttributeList(2, 3, normals);
-		
-		unbindVAO();
-		return new RawModel(vaoID, indices.array().length);
-	}
-	
-	
 	private int createVAO() {
 		int vaoID = GL30.glGenVertexArrays();
 		vaos.add(vaoID);
@@ -63,15 +50,6 @@ public class Loader {
 		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vboID);
 		FloatBuffer buffer = storeDataInfloatBuffer(data);
 		GL15.glBufferData(GL15.GL_ARRAY_BUFFER, buffer, GL15.GL_STREAM_DRAW);
-		GL20.glVertexAttribPointer(attributeNumber, coordinateSize, GL11.GL_FLOAT, false, 0, 0);
-		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
-	}
-	
-	private void storeDataInAttributeList(int attributeNumber, int coordinateSize, FloatBuffer data) {
-		int vboID = GL15.glGenBuffers();
-		vbos.add(vboID);
-		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vboID);
-		GL15.glBufferData(GL15.GL_ARRAY_BUFFER, data, GL15.GL_STREAM_DRAW);
 		GL20.glVertexAttribPointer(attributeNumber, coordinateSize, GL11.GL_FLOAT, false, 0, 0);
 		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
 	}
@@ -109,12 +87,6 @@ public class Loader {
 		GL15.glBufferData(GL15.GL_ELEMENT_ARRAY_BUFFER, buffer, GL15.GL_STATIC_DRAW);
 	}
 	
-	private void bindIndicesBuffer(IntBuffer indices) {
-		int vboID = GL15.glGenBuffers();
-		vbos.add(vboID);
-		GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, vboID);
-		GL15.glBufferData(GL15.GL_ELEMENT_ARRAY_BUFFER, indices, GL15.GL_STATIC_DRAW);
-	}
 	
 	private IntBuffer storeDataIntIntBuffer(int[] data) {
 		IntBuffer buffer = BufferUtils.createIntBuffer(data.length);
@@ -126,7 +98,9 @@ public class Loader {
 	public int loadTexture(String fileName) {
 		Texture texture = null;
 		try {
-			texture = TextureLoader.getTexture("PNG", new FileInputStream("res/" + fileName + ".png"));
+			String extension =  fileName.substring(fileName.lastIndexOf(".") + 1, fileName.length());
+			fileName = fileName.substring(0, fileName.lastIndexOf("."));
+			texture = TextureLoader.getTexture(extension.toUpperCase(), new FileInputStream("res/" + fileName + "." + extension), true);
 			GL30.glGenerateMipmap(GL11.GL_TEXTURE_2D);
 			GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR_MIPMAP_LINEAR);
 			GL11.glTexParameterf(GL11.GL_TEXTURE_2D, GL14.GL_TEXTURE_LOD_BIAS, -0.4f);

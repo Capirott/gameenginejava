@@ -157,7 +157,7 @@ public class MtlReader
             }
             else if (identifier.equalsIgnoreCase("map_Kd"))
             {
-                String mapKd = line.substring("map_Kd".length()).trim();
+                String mapKd = line.trim().substring("map_Kd".length()).trim();
                 currentMtl.setMapKd(mapKd);
             }
             else if (identifier.equalsIgnoreCase("d"))

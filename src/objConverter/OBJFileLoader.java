@@ -124,7 +124,7 @@ public class OBJFileLoader {
 						currentMtl = currentLine[1];
 					} else if (line.startsWith("map_Kd ")) {
 						String name = currentLine[1];
-						mtlMap.put(currentMtl, name.substring(0, name.lastIndexOf(".")));
+						mtlMap.put(currentMtl, name);
 					}
 					line = reader.readLine();
 				}
