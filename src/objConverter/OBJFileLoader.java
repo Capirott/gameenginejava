@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.lwjgl.util.vector.Vector2f;
@@ -28,7 +29,10 @@ public class OBJFileLoader {
 		List<Vertex> vertices = new ArrayList<Vertex>();
 		List<Vector2f> textures = new ArrayList<Vector2f>();
 		List<Vector3f> normals = new ArrayList<Vector3f>();
-		List<Integer> indices = new ArrayList<Integer>();
+		List<List<Integer>> indices = new ArrayList<List<Integer>>();
+		List<String> mtlName = new ArrayList<String>();
+		indices.add(new ArrayList<Integer>());
+		int it = 0;
 		try {
 			while (true) {
 				line = reader.readLine();
@@ -53,15 +57,25 @@ public class OBJFileLoader {
 					break;
 				}
 			}
-			while (line != null && line.startsWith("f ")) {
+			while (line != null) {
 				String[] currentLine = line.split(" ");
-				String[] vertex1 = currentLine[1].split("/");
-				String[] vertex2 = currentLine[2].split("/");
-				String[] vertex3 = currentLine[3].split("/");
-				processVertex(vertex1, vertices, indices);
-				processVertex(vertex2, vertices, indices);
-				processVertex(vertex3, vertices, indices);
-				line = reader.readLine();
+				if (line.startsWith("f ")) {
+					String[] vertex1 = currentLine[1].split("/");
+					String[] vertex2 = currentLine[2].split("/");
+					String[] vertex3 = currentLine[3].split("/");
+					processVertex(vertex1, vertices, indices.get(it));
+					processVertex(vertex2, vertices, indices.get(it));
+					processVertex(vertex3, vertices, indices.get(it));
+					line = reader.readLine();
+				} else if (line.startsWith("usemtl ")) {
+					mtlName.add(currentLine[1]);
+					it++;
+				} 
+				else if (line.startsWith("g ")) {
+					continue;
+				} else {
+					break;
+				}
 			}
 			reader.close();
 		} catch (IOException e) {
@@ -73,6 +87,7 @@ public class OBJFileLoader {
 		float[] normalsArray = new float[vertices.size() * 3];
 		float furthest = convertDataToArrays(vertices, textures, normals, verticesArray, texturesArray, normalsArray);
 		int[] indicesArray = convertIndicesListToArray(indices);
+		List<ModelData> modelDatas = new ArrayList<ModelData>();		
 		ModelData data = new ModelData(verticesArray, texturesArray, normalsArray, indicesArray, furthest);
 		return data;
 	}
