@@ -6,7 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.HashMap;
 import java.util.List;
 
 import org.lwjgl.util.vector.Vector2f;
@@ -16,7 +16,7 @@ public class OBJFileLoader {
 
 	private static final String RES_LOC = "res/";
 
-	public static ModelData loadOBJ(String objFileName) {
+	public static List<ModelData> loadOBJ(String objFileName) {
 		FileReader isr = null;
 		File objFile = new File(RES_LOC + objFileName + ".obj");
 		try {
@@ -29,30 +29,32 @@ public class OBJFileLoader {
 		List<Vertex> vertices = new ArrayList<Vertex>();
 		List<Vector2f> textures = new ArrayList<Vector2f>();
 		List<Vector3f> normals = new ArrayList<Vector3f>();
-		List<List<Integer>> indices = new ArrayList<List<Integer>>();
-		List<String> mtlName = new ArrayList<String>();
-		indices.add(new ArrayList<Integer>());
+		List<List<Integer>> indicesList = new ArrayList<List<Integer>>();
+		String mtlFile = null;
+		List<String> mtlNameList = new ArrayList<String>();
+		mtlNameList.add(new String());
+		indicesList.add(new ArrayList<Integer>());
 		int it = 0;
 		try {
 			while (true) {
 				line = reader.readLine();
+				String[] currentLine = line.split(" ");
 				if (line.startsWith("v ")) {
-					String[] currentLine = line.split(" ");
 					Vector3f vertex = new Vector3f((float) Float.valueOf(currentLine[1]),
 							(float) Float.valueOf(currentLine[2]), (float) Float.valueOf(currentLine[3]));
 					Vertex newVertex = new Vertex(vertices.size(), vertex);
 					vertices.add(newVertex);
 
 				} else if (line.startsWith("vt ")) {
-					String[] currentLine = line.split(" ");
 					Vector2f texture = new Vector2f((float) Float.valueOf(currentLine[1]),
 							(float) Float.valueOf(currentLine[2]));
 					textures.add(texture);
 				} else if (line.startsWith("vn ")) {
-					String[] currentLine = line.split(" ");
 					Vector3f normal = new Vector3f((float) Float.valueOf(currentLine[1]),
 							(float) Float.valueOf(currentLine[2]), (float) Float.valueOf(currentLine[3]));
 					normals.add(normal);
+				} else if (line.startsWith("mtllib ")) {
+					mtlFile = currentLine[1];
 				} else if (line.startsWith("f ")) {
 					break;
 				}
@@ -63,15 +65,18 @@ public class OBJFileLoader {
 					String[] vertex1 = currentLine[1].split("/");
 					String[] vertex2 = currentLine[2].split("/");
 					String[] vertex3 = currentLine[3].split("/");
-					processVertex(vertex1, vertices, indices.get(it));
-					processVertex(vertex2, vertices, indices.get(it));
-					processVertex(vertex3, vertices, indices.get(it));
+					processVertex(vertex1, vertices, indicesList.get(it));
+					processVertex(vertex2, vertices, indicesList.get(it));
+					processVertex(vertex3, vertices, indicesList.get(it));
 					line = reader.readLine();
 				} else if (line.startsWith("usemtl ")) {
-					mtlName.add(currentLine[1]);
+					indicesList.add(new ArrayList<Integer>());
+					mtlNameList.add(currentLine[1]);
 					it++;
+					line = reader.readLine();
 				} 
 				else if (line.startsWith("g ")) {
+					line = reader.readLine();
 					continue;
 				} else {
 					break;
@@ -86,12 +91,52 @@ public class OBJFileLoader {
 		float[] texturesArray = new float[vertices.size() * 2];
 		float[] normalsArray = new float[vertices.size() * 3];
 		float furthest = convertDataToArrays(vertices, textures, normals, verticesArray, texturesArray, normalsArray);
-		int[] indicesArray = convertIndicesListToArray(indices);
-		List<ModelData> modelDatas = new ArrayList<ModelData>();		
-		ModelData data = new ModelData(verticesArray, texturesArray, normalsArray, indicesArray, furthest);
-		return data;
+		List<ModelData> modelDatas = new ArrayList<ModelData>();
+		HashMap<String, String> mtlMap = loadMTL(mtlFile);
+		for (int i = 0; i < indicesList.size(); ++i) {
+			int[] indicesArray = convertIndicesListToArray(indicesList.get(i));
+			String mtlName = mtlNameList.get(i);
+			String mtlDir = mtlName == null ? null : mtlMap.get(mtlName);
+			ModelData data = new ModelData(verticesArray, texturesArray, normalsArray, indicesArray, furthest, mtlDir);
+			modelDatas.add(data);
+		}
+		return modelDatas;
 	}
 
+	private static HashMap<String, String> loadMTL(String mtlFile) {
+		HashMap<String, String> mtlMap = new HashMap<String, String>();
+		if (mtlFile != null) {
+			FileReader isr = null;
+			File objFile = new File("res/" + mtlFile);
+			try {
+				isr = new FileReader(objFile);
+			} catch (FileNotFoundException e) {
+				System.err.println("File not found in res; don't use any extention MTL");
+			}
+			BufferedReader reader = new BufferedReader(isr);
+			String line = null;
+			String currentMtl = null;
+			try {
+				line = reader.readLine();
+				while (line != null) {
+					String[] currentLine = line.split(" ");
+					if (line.startsWith("newmtl ")) {
+						currentMtl = currentLine[1];
+					} else if (line.startsWith("map_Kd ")) {
+						String name = currentLine[1];
+						mtlMap.put(currentMtl, name.substring(0, name.lastIndexOf(".")));
+					}
+					line = reader.readLine();
+				}
+				reader.close();
+			} catch (IOException e) {
+				System.err.println("Error reading the file");
+			}
+		}
+		return mtlMap;
+	}
+	
+	
 	private static void processVertex(String[] vertex, List<Vertex> vertices, List<Integer> indices) {
 		int index = Integer.parseInt(vertex[0]) - 1;
 		Vertex currentVertex = vertices.get(index);
