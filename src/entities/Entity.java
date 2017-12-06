@@ -29,6 +29,9 @@ public class Entity {
 		transformationMatrix.setIdentity();
 		transformationMatrix.translate(position);
 		transformationMatrix.scale(scale);
+		rotateAroundX(rotX, null);
+		rotateAroundY(rotY, null);
+		rotateAroundZ(rotZ, null);
 	}
 	
 	public void increasePosition(float dx, float dy, float dz) {

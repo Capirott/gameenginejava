@@ -40,13 +40,12 @@ public class MainGameLoop {
 	public static void main(String[] args) throws IOException {
 
 		
-		Obj obj =  ObjReader.read(new FileInputStream("res/Paris2010_0.obj"));       
+		Obj obj =  ObjReader.read(new FileInputStream("res/re4_village2.obj"));       
+//		Obj obj2 =  ObjReader.read(new FileInputStream("res/r8_gt_obj.obj"));       
 
 		DisplayManager.createDisplay();
 		Loader loader = new Loader();
 
-		List<ModelData> data = OBJFileLoader.loadOBJ("tree");
-		ModelData modelData = data.get(0);
 		List<ModelData> data2 = OBJFileLoader.loadOBJ("fern");
 		ModelData modelData2 = data2.get(0);
 		List<ModelData> data3 = OBJFileLoader.loadOBJ("grass");
@@ -55,11 +54,8 @@ public class MainGameLoop {
 		ModelData modelData4 = data4.get(0);
 		List<ModelData> data5 = OBJFileLoader.loadOBJ("joint");		
 		ModelData modelData5 = data5.get(0);
-		List<ModelData> data6 = OBJFileLoader.loadOBJ("Paris2010_0");		
-		ModelData modelData6 = data6.get(0);
 		
 		
-		RawModel rawModel = loader.loadToVAO(modelData.getVertices(), modelData.getTextureCoords(), modelData.getNormals(), modelData.getIndices());
 		RawModel fern = loader.loadToVAO(modelData2.getVertices(), modelData2.getTextureCoords(), modelData2.getNormals(), modelData2.getIndices());
 		RawModel grass = loader.loadToVAO(modelData3.getVertices(), modelData3.getTextureCoords(), 	modelData3.getNormals(), modelData3.getIndices());
 		RawModel joint_i = loader.loadToVAO(modelData4.getVertices(), modelData4.getTextureCoords(), modelData4.getNormals(), modelData4.getIndices()); 
@@ -67,7 +63,6 @@ public class MainGameLoop {
 		
 		TexturedModel joint_iModel = new TexturedModel(joint_i, new ModelTexture(loader.loadTexture("tree.png")));
 		TexturedModel jointModel = new TexturedModel(joint, new ModelTexture(loader.loadTexture("tree.png")));
-		TexturedModel staticModel = new TexturedModel(rawModel, new ModelTexture(loader.loadTexture("tree.png")));
 		TexturedModel fernModel = new TexturedModel(fern, new ModelTexture(loader.loadTexture("fern.png")));
 		TexturedModel grassModel = new TexturedModel(grass, new ModelTexture(loader.loadTexture("grass2.png")));
 
@@ -82,7 +77,7 @@ public class MainGameLoop {
 		Player player = new Player(jointModel, joint_iModel, new Vector3f(500, 0, 500), 0, 0, 0, new Vector3f(1.0f, 1.0f, 1.0f));
 
 
-		Light light = new Light(new Vector3f(20000, 20000, 2000), new Vector3f(0.99f, 0.83f, 0.25f));
+		Light light = new Light(new Vector3f(1000, 20000, 1000), new Vector3f(0.99f, 0.83f, 0.25f));
 
 		
 		TerrainTexture backgroundTexture = new TerrainTexture(loader.loadTexture("grassy.png"));
@@ -92,9 +87,9 @@ public class MainGameLoop {
 		TerrainTexture blendMap = new TerrainTexture(loader.loadTexture("blendMap.png"));
 		
 		List<Mtl> mtls = MtlReader.read(new FileInputStream("res/" + obj.getMtlFileNames().get(0)));
-		HashMap<String, String> hashMtlMapKd = new HashMap<String, String>(); 
+		HashMap<String, Mtl> hashMtlMapKd = new HashMap<String, Mtl>(); 
 		for (Mtl mtl : mtls) {
-			hashMtlMapKd.put(mtl.getName(), mtl.getMapKd());
+			hashMtlMapKd.put(mtl.getName(), mtl);
 		}
 		
 //		for (int i = 0; i < data6.size(); ++i) {
@@ -117,15 +112,43 @@ public class MainGameLoop {
 			float[] texCoords = ObjData.getTexCoordsArray(part, 2);
 			float[] normals = ObjData.getNormalsArray(part);
 			RawModel house = loader.loadToVAO(vertices, texCoords, normals, indices);
-			String mtlName = hashMtlMapKd.get(part.getMaterialGroup(0).getName());
+			Mtl mtl = hashMtlMapKd.get(part.getMaterialGroup(0).getName());
+			String mtlName = mtl.getMapKd();
 			if (mtlName == null) {
 				mtlName = "path.png";
 			}
 			
 			TexturedModel houseModel = new TexturedModel(house, new ModelTexture(loader.loadTexture(mtlName)));
-			houseModel.getTexture().setUseFakeLighting(true);
-			entities.add(new Entity(houseModel, new Vector3f(500, -320, 500), 0, 0, 0, new Vector3f(5f, 5f, 5f)));
+			if (mtl.getD() == 0) {
+				houseModel.getTexture().setHasTransparency(true);
+				houseModel.getTexture().setShineDamper(mtl.getNs());
+				houseModel.getTexture().setReflectivity(mtl.getKd().get(0));
+			} 				
+			entities.add(new Entity(houseModel, new Vector3f(500, 0, 500), 0, 0, 0, new Vector3f(15f, 15f, 15f)));
 		}
+		
+//		mtls = MtlReader.read(new FileInputStream("res/" + obj2.getMtlFileNames().get(0)));
+//		hashMtlMapKd = new HashMap<String, String>(); 
+//		for (Mtl mtl : mtls) {
+//			hashMtlMapKd.put(mtl.getName(), mtl.getMapKd());
+//		}
+//		for (int i = 0; i < obj2.getNumMaterialGroups(); ++i) {
+//			Obj part = ObjUtils.groupToObj(obj2, obj2.getMaterialGroup(i), null);
+//			part = ObjUtils.convertToRenderable(part);
+//			int[] indices = ObjData.getFaceVertexIndicesArray(part, 3);
+//			float[] vertices = ObjData.getVerticesArray(part);
+//			float[] texCoords = ObjData.getTexCoordsArray(part, 2);
+//			float[] normals = ObjData.getNormalsArray(part);
+//			RawModel house = loader.loadToVAO(vertices, texCoords, normals, indices);
+//			String mtlName = hashMtlMapKd.get(part.getMaterialGroup(0).getName());
+//			if (mtlName == null) {
+//				mtlName = "path.png";
+//			}
+			
+//			TexturedModel houseModel = new TexturedModel(house, new ModelTexture(loader.loadTexture(mtlName)));
+//			houseModel.getTexture().setUseFakeLighting(true);
+//			entities.add(new Entity(houseModel, new Vector3f(500, 0, 500), 0, 0, 0, new Vector3f(5f, 5f, 5f)));
+//		}
 		
 		TerrainTexturePack texturePack = new TerrainTexturePack(backgroundTexture, rTexture, gTexture, bTexture);
 		
