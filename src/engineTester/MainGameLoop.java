@@ -123,7 +123,6 @@ public class MainGameLoop {
 			}
 			
 			TexturedModel houseModel = new TexturedModel(house, new ModelTexture(loader.loadTexture(mtlName)));
-			houseModel.getTexture().setUseFakeLighting(true);
 			entities.add(new Entity(houseModel, new Vector3f(500, -320, 500), 0, 0, 0, new Vector3f(5f, 5f, 5f)));
 		}
 		
@@ -131,7 +130,7 @@ public class MainGameLoop {
 		
 		Camera camera = new Camera(player);
 		camera.setPosition(new Vector3f(0, 30, 0));
-		MasterRenderer renderer = new MasterRenderer();
+		MasterRenderer renderer = new MasterRenderer(loader);
 
 		for (int i = 0; i < 1; ++i) {
 			for (int j = 0; j < 1; ++j) {
