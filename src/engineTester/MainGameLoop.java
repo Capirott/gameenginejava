@@ -154,7 +154,7 @@ public class MainGameLoop {
 		
 		Camera camera = new Camera(player);
 		camera.setPosition(new Vector3f(0, 30, 0));
-		MasterRenderer renderer = new MasterRenderer();
+		MasterRenderer renderer = new MasterRenderer(loader);
 
 		for (int i = 0; i < 1; ++i) {
 			for (int j = 0; j < 1; ++j) {
