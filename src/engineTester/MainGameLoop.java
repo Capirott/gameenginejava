@@ -40,7 +40,7 @@ public class MainGameLoop {
 	public static void main(String[] args) throws IOException {
 
 		
-		Obj obj =  ObjReader.read(new FileInputStream("res/re4_village2.obj"));       
+		Obj obj =  ObjReader.read(new FileInputStream("res/paris.obj"));       
 //		Obj obj2 =  ObjReader.read(new FileInputStream("res/r8_gt_obj.obj"));       
 
 		DisplayManager.createDisplay();
@@ -124,7 +124,7 @@ public class MainGameLoop {
 				houseModel.getTexture().setShineDamper(mtl.getNs());
 				houseModel.getTexture().setReflectivity(mtl.getKd().get(0));
 			} 				
-			entities.add(new Entity(houseModel, new Vector3f(500, 0, 500), 0, 0, 0, new Vector3f(15f, 15f, 15f)));
+			entities.add(new Entity(houseModel, new Vector3f(500, -970, 500), 0, 0, 0, new Vector3f(15f, 15f, 15f)));
 		}
 		
 //		mtls = MtlReader.read(new FileInputStream("res/" + obj2.getMtlFileNames().get(0)));
